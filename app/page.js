@@ -1,101 +1,197 @@
+'use client'
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const [selectedCountry, setSelectedCountry] = useState("Thailand");
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const carouselRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+    const packages = {
+        Thailand: ["Bangkok", "Phuket", "Chiang Mai"],
+        India: ["Goa", "Kerala", "Rajasthan"],
+        "United States": ["New York", "Los Angeles", "Miami"],
+        "United Kingdom": ["London", "Edinburgh", "Manchester"],
+        "Australia": ["Sydney", "Melbourne", "Brisbane"],
+        "France": ["Paris", "Nice", "Lyon"]
+        // ...add more countries and cities
+    };
+
+    const slides = [
+        {
+            image: "/thailand.jpg",
+            title: "Explore Thailand's Wonders",
+            description: "Discover ancient temples, vibrant markets, and stunning beaches. Experience the magic of Thailand.",
+            price: "₹29999"
+        },
+        {
+            image: "/india.jpg",
+            title: "Journey Through Incredible India",
+            description: "Immerse yourself in the rich culture, diverse landscapes, and spiritual heritage of India.",
+            price: "₹89999"
+        },
+        {
+            image: "/newyork.jpg",
+            title: "Experience the Energy of New York",
+            description: "Discover iconic landmarks, world-class dining, and vibrant city life in the Big Apple.",
+             price: "₹99999"
+        },
+         {
+             image: "/london.jpg",
+            title: "Step into History in London",
+            description: "Explore historical sites, museums, and experience the lively atmosphere of this iconic city",
+             price: "₹119999"
+         },
+          {
+            image: "/sydney.jpg",
+            title: "Visit Sydney",
+            description: "Discover this iconic city, amazing landscapes, and beautiful beaches",
+              price: "₹129999"
+        },
+        {
+           image: "/paris.jpg",
+            title: "Explore Paris",
+            description: "Explore the city of Love with the most romantic sites",
+               price: "₹139999"
+        }
+        // Add more slides as you want
+
+    ];
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+        }, 5000); // Change slide every 5 seconds
+
+        return () => clearInterval(interval);
+    }, [slides.length]);
+
+     const handlePrevSlide = () => {
+         setCurrentSlide((prevSlide) => (prevSlide === 0 ? slides.length - 1 : prevSlide - 1));
+     };
+
+    const handleNextSlide = () => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    };
+
+
+    return (
+        <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
+            {/* Navbar */}
+            <nav className="bg-white p-4 text-zinc-900 flex justify-between items-center fixed top-0 z-50 w-screen">
+                <a href="/" className="text-xl font-bold">Holiday Planner</a>
+                <div className="space-x-6 mr-4">
+                  <a href="#" className="hover:text-gray-300">Destinations</a>
+                    <a href="#" className="hover:text-gray-300">Packages</a>
+                    <a href="#" className="hover:text-gray-300">About Us</a>
+                    <a href="#" className="hover:text-gray-300">Contact</a>
+
+                </div>
+            </nav>
+
+            {/* Main Content */}
+            <main className="p-0 sm:p-0 pb-20">
+                {/* Carousel */}
+                <section className="relative overflow-hidden mb-12">
+                    <div ref={carouselRef} className="flex rounded transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+                        {slides.map((slide, index) => (
+                            <div key={index} className="w-full flex-shrink-0 relative">
+                                 <Image className="w-full h-full sm:h-[80vh] object-cover" src={slide.image} alt={slide.title} width={1200} height={600} />
+                                 <div className="absolute bottom-0  text-white p-4 bg-gradient-to-t bg-black bg-opacity-70  w-full">
+                                  <h2 className="text-2xl font-bold mb-2">{slide.title}</h2>
+                                    <p className="mb-2">{slide.description}</p>
+                                    <p className="text-xl font-bold">Price : {slide.price}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                     {/* Arrows for navigation */}
+                     <div className="absolute top-1/2 transform -translate-y-1/2 left-4 sm:left-8 text-white flex items-center">
+                          <button onClick={handlePrevSlide} className="bg-gray-700 hover:bg-gray-600 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                        <div className="absolute top-1/2 transform -translate-y-1/2 right-4 sm:right-8 text-white flex items-center">
+                        <button onClick={handleNextSlide} className="bg-gray-700 hover:bg-gray-600 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                           </button>
+                        </div>
+
+
+                </section>
+
+                <section className="mb-8 p-6">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-4">Popular Destinations</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <Image src="/bangkok.jpg" alt="Bangkok" width={400} height={300} className="object-cover w-full h-60" />
+                            <div className="p-4">
+                                <h3 className="text-xl font-semibold text-gray-800">Bangkok, Thailand</h3>
+                                <p className="text-gray-600">From ₹799</p>
+                            </div>
+                        </div>
+                        <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <Image src="/goa.jpg" alt="Goa" width={400} height={300} className="object-cover w-full h-60" />
+                            <div className="p-4">
+                                <h3 className="text-xl font-semibold text-gray-800">Goa, India</h3>
+                                <p className="text-gray-600">From ₹899</p>
+                            </div>
+                        </div>
+                          <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <Image src="/newyork.jpg" alt="New York" width={400} height={300} className="object-cover w-full h-60" />
+                            <div className="p-4">
+                                <h3 className="text-xl font-semibold text-gray-800">New York, USA</h3>
+                                <p className="text-gray-600">From ₹999</p>
+                            </div>
+                        </div>
+                         <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <Image src="/london.jpg" alt="London" width={400} height={300} className="object-cover w-full h-60" />
+                            <div className="p-4">
+                                <h3 className="text-xl font-semibold text-gray-800">London, UK</h3>
+                                 <p className="text-gray-600">From ₹1199</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Filter by Country */}
+                <section className="filter-by-country p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Filter by Country</h2>
+                    <select
+                        value={selectedCountry}
+                        onChange={(e) => setSelectedCountry(e.target.value)}
+                        className="p-2 border rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        {Object.keys(packages).map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="city-packages grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        {packages[selectedCountry].map((city) => (
+                            <div key={city} className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                <Image src={`/${city.toLowerCase()}.jpg`} alt={city} width={400} height={300} className="object-cover w-full h-60" />
+                                <div className="p-4">
+                                <h3 className="text-xl font-semibold text-gray-800">{city}</h3>
+                                     <p className="text-gray-600">From ₹799</p>
+                                </div>
+
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
+            <footer className="bg-gray-800 p-6 text-white text-center">
+             <p>© {new Date().getFullYear()} Holiday Planner. All rights reserved.</p>
+             </footer>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
