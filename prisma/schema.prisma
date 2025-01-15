@@ -66,6 +66,7 @@ model User {
  firstName String    @map("first_name")
  lastName  String    @map("last_name")
  email     String    @unique
+ password  String
  bookings  Booking[]
  reviews   Review[]
  createdAt DateTime @default(now()) @map("created_at")
