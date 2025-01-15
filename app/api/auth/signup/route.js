@@ -1,7 +1,6 @@
 // /app/api/auth/signup/route.js
 import prisma from '@/prisma/client';
 import { NextResponse } from 'next/server';
-import { hash } from 'bcryptjs';
 
 export async function POST(req){
     try {
