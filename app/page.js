@@ -11,8 +11,13 @@ export default function Home() {
   const [navBlurred, setNavBlurred] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const carouselRef = useRef(null);
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [selectedCountryData, setSelectedCountryData] = useState(null);
+    const [selectedCityData, setSelectedCityData] = useState(null);
 
-  const packages = {
+  const packagesData = {
     Thailand: ["Bangkok", "Phuket", "Chiang Mai"],
     India: ["Goa", "Kerala", "Rajasthan"],
     "United States": ["New York", "Los Angeles", "Miami"],
@@ -74,6 +79,7 @@ export default function Home() {
     // Add more slides as you want
   ];
 
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
@@ -94,7 +100,60 @@ export default function Home() {
     };
   }, [slides.length]);
 
-  const handlePrevSlide = () => {
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('/api/countries');
+        if (response.ok) {
+            const data = await response.json();
+           setCountries(data);
+        } else {
+          console.error('Failed to fetch countries', response.status);
+        }
+      } catch (error) {
+         console.error('Error fetching countries', error);
+      }
+    };
+    fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetch('/api/cities');
+        if (response.ok) {
+             const data = await response.json();
+            setCities(data);
+        } else {
+            console.error("Error getting cities", response.status)
+        }
+       } catch (error) {
+            console.error("Error fetching cities:", error);
+      }
+   }
+    fetchCities()
+ },[])
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await fetch('/api/packages');
+        if (response.ok) {
+           const data = await response.json();
+           setPackages(data);
+        } else {
+             console.error("Error fetching packages:", response.status)
+        }
+
+      } catch (error) {
+         console.error("Error fetching packages:", error)
+      }
+    };
+    fetchPackages();
+  }, []);
+
+   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
       prevSlide === 0 ? slides.length - 1 : prevSlide - 1
     );
@@ -107,6 +166,19 @@ export default function Home() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  const handleCountryClick = (country) => {
+    setSelectedCountryData(country);
+     setSelectedCityData(null);
+  };
+
+  const handleCityClick = (city) => {
+      setSelectedCityData(city);
+  }
+
+
+  const filteredCities = selectedCountryData ? cities.filter(city => city.countryId === selectedCountryData.id) : []
+     const filteredPackages = selectedCityData ? packages.filter(pkg => pkg.cityId === selectedCityData.id) : []
 
   return (
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
@@ -279,56 +351,81 @@ export default function Home() {
             </button>
           </div>
         </div>
+        <section className="mt-16 p-6 sm:p-20">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
+            Explore Destinations
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
+          {countries.map((country) => (
+                <div
+                   key={country.id}
+                  className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
+                    onClick={() => handleCountryClick(country)}
+                >
+                    <div className="py-4">
+                     <h3 className="text-xl font-extrabold text-gray-800 text-center">
+                       {country.name}
+                       </h3>
+                   </div>
+                  </div>
+                ))}
+             </div>
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
+
+            {selectedCountryData ? (
+          filteredCities.length > 0 ? (
+           filteredCities.map((city) => (
+                  <div
+                    key={city.id}
+                     className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
+                     onClick={() => handleCityClick(city)}
+                  >
+                    <div className="py-4">
+                      <h3 className="text-xl font-semibold text-gray-800 text-center">
+                         {city.name}
+                       </h3>
+                   </div>
+                  </div>
+             ))
+           ) : (
+                <p className="text-gray-600 text-center">No cities to show for {selectedCountryData.name}</p>
+            )
+          ) : (
+               <p className="text-gray-600 text-center">Click on a country to show cities</p>
+           )}
+
+         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
+
+           {selectedCityData ? (
+               filteredPackages.length > 0 ? (
+                   filteredPackages.map((pkg) => (
+                     <div
+                       key={pkg.id}
+                        className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group"
+                     >
+                       <div className="py-4">
+                       <h3 className="text-xl font-semibold text-gray-800">
+                          {pkg.title}
+                         </h3>
+                          <p className="text-gray-600">From ₹{pkg.price}</p>
+                     </div>
+                    </div>
+                ))
+             ) : (
+              <p className="text-gray-600 text-center">No Packages to show for {selectedCityData.name}</p>
+            )
+          ) : (
+              <p className="text-gray-600 text-center">Click on a city to show packages.</p>
+          )}
+         </div>
+    </section>
 
         <section className="mb-8 p-6 sm:p-20">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
             Popular Destinations
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
-            {/* Here is the card */}
-            {Object.keys(ratings).map((city) => (
-              <div
-                key={city}
-                className="relative overflow-hidden rounded-lg transition-shadow duration-300 group"
-              >
-                <div className="relative aspect-square">
-                  <Image
-                    src={`/${city.toLowerCase()}.jpg`}
-                    alt={city}
-                    fill
-                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
-                    className="object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute top-2 right-2 bg-gray-900 bg-opacity-70 rounded-md p-1 flex items-center text-white text-xs">
-                  {ratings[city]}
-                  <BsStarFill className="ml-1" />
-                </div>
-                <div className="py-4">
-                  <h3 className="text-xl font-extrabold text-gray-800">
-                    {city},{" "}
-                    {city === "Bangkok"
-                      ? "Thailand"
-                      : city === "Goa"
-                      ? "India"
-                      : city === "New York"
-                      ? "USA"
-                      : "UK"}
-                  </h3>
-                  <p className="text-gray-600">
-                    From ₹
-                    {city === "Bangkok"
-                      ? "799"
-                      : city === "Goa"
-                      ? "899"
-                      : city === "New York"
-                      ? "999"
-                      : "1199"}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
             {/* Here is the card */}
             {Object.keys(ratings).map((city) => (
@@ -386,14 +483,14 @@ export default function Home() {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="p-2 border rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            {Object.keys(packages).map((country) => (
+            {Object.keys(packagesData).map((country) => (
               <option key={country} value={country}>
                 {country}
               </option>
             ))}
           </select>
           <div className="city-packages grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {packages[selectedCountry].map((city) => (
+            {packagesData[selectedCountry].map((city) => (
               <div
                 key={city}
                 className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
