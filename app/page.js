@@ -15,7 +15,7 @@ export default function Home() {
   const [cities, setCities] = useState([]);
   const [packages, setPackages] = useState([]);
   const [selectedCountryData, setSelectedCountryData] = useState(null);
-    const [selectedCityData, setSelectedCityData] = useState(null);
+  const [selectedCityData, setSelectedCityData] = useState(null);
 
   const packagesData = {
     Thailand: ["Bangkok", "Phuket", "Chiang Mai"],
@@ -79,7 +79,6 @@ export default function Home() {
     // Add more slides as you want
   ];
 
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
@@ -100,60 +99,58 @@ export default function Home() {
     };
   }, [slides.length]);
 
-
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('/api/countries');
+        const response = await fetch("/api/countries");
         if (response.ok) {
-            const data = await response.json();
-           setCountries(data);
+          const data = await response.json();
+          setCountries(data);
         } else {
-          console.error('Failed to fetch countries', response.status);
+          console.error("Failed to fetch countries", response.status);
         }
       } catch (error) {
-         console.error('Error fetching countries', error);
+        console.error("Error fetching countries", error);
       }
     };
-    fetchCountries(); 
+    fetchCountries();
   }, []);
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await fetch('/api/cities');
+        const response = await fetch("/api/cities");
         if (response.ok) {
-             const data = await response.json();
-            setCities(data);
+          const data = await response.json();
+          setCities(data);
         } else {
-            console.error("Error getting cities", response.status)
+          console.error("Error getting cities", response.status);
         }
-       } catch (error) {
-            console.error("Error fetching cities:", error);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
       }
-   }
-    fetchCities()
- },[])
+    };
+    fetchCities();
+  }, []);
 
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch('/api/packages');
+        const response = await fetch("/api/packages");
         if (response.ok) {
-           const data = await response.json();
-           setPackages(data);
+          const data = await response.json();
+          setPackages(data);
         } else {
-             console.error("Error fetching packages:", response.status)
+          console.error("Error fetching packages:", response.status);
         }
-
       } catch (error) {
-         console.error("Error fetching packages:", error)
+        console.error("Error fetching packages:", error);
       }
     };
     fetchPackages();
   }, []);
 
-   const handlePrevSlide = () => {
+  const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
       prevSlide === 0 ? slides.length - 1 : prevSlide - 1
     );
@@ -169,19 +166,22 @@ export default function Home() {
 
   const handleCountryClick = (country) => {
     setSelectedCountryData(country);
-     setSelectedCityData(null);
+    setSelectedCityData(null);
   };
 
   const handleCityClick = (city) => {
-      setSelectedCityData(city);
-  }
+    setSelectedCityData(city);
+  };
   // const handleCountry = (country) => {
   //   window.location.href = `/${country}`;
   // };
 
-
-  const filteredCities = selectedCountryData ? cities.filter(city => city.countryId === selectedCountryData.id) : []
-     const filteredPackages = selectedCityData ? packages.filter(pkg => pkg.cityId === selectedCityData.id) : []
+  const filteredCities = selectedCountryData
+    ? cities.filter((city) => city.countryId === selectedCountryData.id)
+    : [];
+  const filteredPackages = selectedCityData
+    ? packages.filter((pkg) => pkg.cityId === selectedCityData.id)
+    : [];
 
   return (
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
@@ -355,82 +355,89 @@ export default function Home() {
           </div>
         </div>
         <section className="mt-16 p-6 sm:p-20">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
             Explore Destinations
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
-          {countries.map((country) => (
-                <div
-                   key={country.id}
-                  className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
-                    onClick={() => handleCountryClick(country)}
-                >
-                    <div className="py-4">
-                     <h3 className="text-xl font-extrabold text-gray-800 text-center"
-                    // onClick={() =>{
-                    // window.open(
-                    //         `/country/${country.name}`,
-                    //         "_blank",
-                    //         "noopener,noreferrer"
-                    //       )}}
-                      >
-                       {country.name}
-                       </h3>
-                   </div>
-                  </div>
-                ))}
-             </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
-
+            {countries.map((country) => (
+              <div
+                key={country.id}
+                className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
+                onClick={() => handleCountryClick(country)}
+              >
+                <div className="py-4">
+                  <h3
+                    className="text-xl font-extrabold text-gray-800 text-center"
+                    onClick={() => {
+                      window.open(
+                        `/country/${country.name}`,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                    }}
+                  >
+                    {country.name}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
             {selectedCountryData ? (
-          filteredCities.length > 0 ? (
-           filteredCities.map((city) => (
+              filteredCities.length > 0 ? (
+                filteredCities.map((city) => (
                   <div
                     key={city.id}
-                     className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
-                     onClick={() => handleCityClick(city)}
+                    className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
+                    onClick={() => handleCityClick(city)}
                   >
                     <div className="py-4">
                       <h3 className="text-xl font-semibold text-gray-800 text-center">
-                         {city.name}
-                       </h3>
-                   </div>
-                  </div>
-             ))
-           ) : (
-                <p className="text-gray-600 text-center">No cities to show for {selectedCountryData.name}</p>
-            )
-          ) : (
-               <p className="text-gray-600 text-center">Click on a country to show cities</p>
-           )}
-
-         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
-
-           {selectedCityData ? (
-               filteredPackages.length > 0 ? (
-                   filteredPackages.map((pkg) => (
-                     <div
-                       key={pkg.id}
-                        className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group"
-                     >
-                       <div className="py-4">
-                       <h3 className="text-xl font-semibold text-gray-800">
-                          {pkg.title}
-                         </h3>
-                          <p className="text-gray-600">From ₹{pkg.price}</p>
-                     </div>
+                        {city.name}
+                      </h3>
                     </div>
+                  </div>
                 ))
-             ) : (
-              <p className="text-gray-600 text-center">No Packages to show for {selectedCityData.name}</p>
-            )
-          ) : (
-              <p className="text-gray-600 text-center">Click on a city to show packages.</p>
-          )}
-         </div>
-    </section>
+              ) : (
+                <p className="text-gray-600 text-center">
+                  No cities to show for {selectedCountryData.name}
+                </p>
+              )
+            ) : (
+              <p className="text-gray-600 text-center">
+                Click on a country to show cities
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
+            {selectedCityData ? (
+              filteredPackages.length > 0 ? (
+                filteredPackages.map((pkg) => (
+                  <div
+                    key={pkg.id}
+                    className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group"
+                  >
+                    <div className="py-4">
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {pkg.title}
+                      </h3>
+                      <p className="text-gray-600">From ₹{pkg.price}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600 text-center">
+                  No Packages to show for {selectedCityData.name}
+                </p>
+              )
+            ) : (
+              <p className="text-gray-600 text-center">
+                Click on a city to show packages.
+              </p>
+            )}
+          </div>
+        </section>
 
         <section className="mb-8 p-6 sm:p-20">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
