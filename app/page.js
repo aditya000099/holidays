@@ -115,7 +115,7 @@ export default function Home() {
          console.error('Error fetching countries', error);
       }
     };
-    fetchCountries();
+    fetchCountries(); 
   }, []);
 
   useEffect(() => {
@@ -175,6 +175,9 @@ export default function Home() {
   const handleCityClick = (city) => {
       setSelectedCityData(city);
   }
+  // const handleCountry = (country) => {
+  //   window.location.href = `/${country}`;
+  // };
 
 
   const filteredCities = selectedCountryData ? cities.filter(city => city.countryId === selectedCountryData.id) : []
@@ -363,7 +366,14 @@ export default function Home() {
                     onClick={() => handleCountryClick(country)}
                 >
                     <div className="py-4">
-                     <h3 className="text-xl font-extrabold text-gray-800 text-center">
+                     <h3 className="text-xl font-extrabold text-gray-800 text-center"
+                    // onClick={() =>{
+                    // window.open(
+                    //         `/country/${country.name}`,
+                    //         "_blank",
+                    //         "noopener,noreferrer"
+                    //       )}}
+                      >
                        {country.name}
                        </h3>
                    </div>
