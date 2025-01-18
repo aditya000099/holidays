@@ -80,7 +80,7 @@ export default function AdminPanel() {
 
 
   return (
-    <div className="container mx-auto p-6 sm:p-20">
+    <div className="container mx-auto p-6 sm:p-20 font-[family-name:var(--font-geist-sans)]">
     <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
            Admin Panel

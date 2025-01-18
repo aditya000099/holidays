@@ -42,7 +42,7 @@ export default function PackagePage() {
   };
 
   return (
-    <div>
+    <div className="font-[family-name:var(--font-geist-sans)]">
       <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
       <div className="container mx-auto p-6 sm:p-20">
         {pkg ? (
