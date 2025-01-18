@@ -3,12 +3,15 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { use } from 'react';
 
 export default function CountryPage() {
+  const params = useParams();
   const { countryName } = useParams();
   const [country, setCountry] = useState(null);
   const [cities, setCities] = useState([]);
+ const router = useRouter()
 
     useEffect(() => {
     const fetchCountryData = async () => {
@@ -64,7 +67,7 @@ export default function CountryPage() {
                           {city.name}
                        </h2>
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                   <PackageList cityId={city.id} cityName={city.name} />
+                   <PackageList cityId={city.id} cityName={city.name} countryName={countryName} />
                    </div>
                  </section>
               ))
@@ -79,8 +82,9 @@ export default function CountryPage() {
   );
 }
 
-function PackageList({ cityId, cityName }) {
+function PackageList({ cityId, cityName, countryName }) {
     const [packages, setPackages] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchPackages = async () => {
@@ -99,21 +103,36 @@ function PackageList({ cityId, cityName }) {
        fetchPackages()
     },[cityId]);
 
+    const handlePackageClick = (pkg) => {
+       router.push(`/countries/${countryName}/${cityName.toLowerCase()}/${pkg.id}`)
+    };
+
   return (
     <>
       {packages.length > 0 ? (
         packages.map((pkg) => (
           <div
             key={pkg.id}
-            className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group"
+            className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group cursor-pointer"
+              onClick={() => handlePackageClick(pkg)}
           >
            <div className="py-4">
+           {pkg.images && pkg.images.length > 0 ? (
+                   <Image
+                      src={pkg.images[0].imageUrl}
+                       alt={`Image for ${pkg.title}`}
+                        width={400}
+                        height={300}
+                      className="object-cover w-full h-60"
+                      />
+                ) : null
+              }
                  <h3 className="text-xl font-semibold text-gray-800">
                     {pkg.title}
                 </h3>
                   <p className="text-gray-600">From ₹{pkg.price}</p>
             </div>
-          </div>
+         </div>
         ))
       ) : (
         <p className="text-gray-600">No Packages found for {cityName}.</p>

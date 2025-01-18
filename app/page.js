@@ -370,7 +370,7 @@ export default function Home() {
                     className="text-xl font-extrabold text-gray-800 text-center"
                     onClick={() => {
                       window.open(
-                        `/country/${country.name}`,
+                        `/countries/${country.name}`,
                         "_blank",
                         "noopener,noreferrer"
                       );

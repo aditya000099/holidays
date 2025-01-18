@@ -24,7 +24,8 @@ export async function POST(req) {
             return NextResponse.json({message: "Invalid credentials"}, {status: 401})
         }
           console.log("User is valid", {user})
-         return NextResponse.json({id: user.id, email: user.email}, {status: 200})
+          console.log("Admin hai kya?", user.isAdmin)
+         return NextResponse.json({id: user.id, email: user.email, isAdmin: user.isAdmin}, {status: 200})
 
     } catch (e) {
          console.log("Error while verifying credentials", {e})

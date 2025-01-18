@@ -1,5 +1,4 @@
 // /app/api/auth/[...nextauth]/route.js
-
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/prisma/client";
@@ -22,13 +21,14 @@ export const authOptions = {
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(credentials),
         });
-        //   console.log("Result from the login endpoint", {res})
+        //  console.log("Result from the login endpoint", {res})
         if (res.ok) {
           const user = await res.json();
-          // console.log("User is ", {user});
+          console.log("Authorize returned user:", { user });
           return {
-            ...user,
-            success: true,
+            id: user.id,
+            email: user.email,
+            isAdmin: user.isAdmin || false,
           };
         } else {
           const data = await res.json();
@@ -42,7 +42,11 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token, user }) {
-      session.user.id = user.id;
+      console.log("Session callback", { user });
+      if (user) {
+        session.user.id = user.id;
+        session.user.isAdmin = user.isAdmin;
+      }
       return session;
     },
     async signIn({ user, account, profile, email, credentials }) {

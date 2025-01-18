@@ -8,85 +8,108 @@ datasource db {
 }
 
 model Country {
- id        Int      @id @default(autoincrement())
- name      String   @unique
- currency  String
- cities    City[]
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  currency  String
+  cities    City[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("countries")
 }
 
 model City {
- id        Int      @id @default(autoincrement())
- countryId Int      @map("country_id")
- country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
- name      String
- packages  Package[]
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  countryId Int      @map("country_id")
+  country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  name      String
+  packages  Package[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([countryId], map: "city_country_id_fk")
   @@map("cities")
 }
 
 model Package {
- id          Int             @id @default(autoincrement())
- cityId      Int             @map("city_id")
- city        City            @relation(fields: [cityId], references: [id], onDelete: Cascade)
- title       String
- description String?
- price       Decimal         @db.Decimal(10, 2)
- durationDays Int?          @map("duration_days")
- images      PackageImage[]
- bookings   Booking[]
- reviews   Review[]
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id          Int             @id @default(autoincrement())
+  cityId      Int             @map("city_id")
+  city        City            @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  price       Decimal         @db.Decimal(10, 2)
+  durationDays Int?          @map("duration_days")
+  days Int?
+  nights Int?
+  images      PackageImage[]
+  bookings   Booking[]
+  reviews   Review[]
+  highlights  String[]
+  exclusions  String[]
+  inclusions   String[]
+  itinerary PackageItinerary[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([cityId], map: "package_city_id_fk")
   @@map("packages")
 }
 
+model PackageItinerary {
+    id        Int      @id @default(autoincrement())
+    packageId Int  @map("package_id")
+    package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+    day Int
+    title String
+    description String?
+    image String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+     @@index([packageId], map: "package_itinerary_package_id_fk")
+    @@map("package_itineraries")
+}
+
 model PackageImage {
- id        Int     @id @default(autoincrement())
- packageId Int     @map("package_id")
- package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
- imageUrl  String
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int     @id @default(autoincrement())
+  packageId Int     @map("package_id")
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([packageId], map: "package_image_package_id_fk")
   @@map("package_images")
 }
 
 model User {
- id        Int       @id @default(autoincrement())
- firstName String    @map("first_name")
- lastName  String    @map("last_name")
- email     String    @unique
- password  String
- bookings  Booking[]
- reviews   Review[]
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int       @id @default(autoincrement())
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  email     String    @unique
+  password  String
+  isAdmin   Boolean   @default(false)
+  bookings  Booking[]
+    reviews   Review[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Booking {
- id          Int      @id @default(autoincrement())
- userId      Int      @map("user_id")
- user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- packageId   Int      @map("package_id")
- package     Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
- bookingDate DateTime @map("booking_date") @db.Date
- checkInDate DateTime @map("check_in_date") @db.Date
- checkOutDate DateTime @map("check_out_date") @db.Date
- guests      Int
- createdAt   DateTime @default(now()) @map("created_at")
- updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId   Int      @map("package_id")
+  package     Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  bookingDate DateTime @map("booking_date") @db.Date
+  checkInDate DateTime @map("check_in_date") @db.Date
+  checkOutDate DateTime @map("check_out_date") @db.Date
+  guests      Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([userId], map: "booking_user_id_fk")
   @@index([packageId], map: "booking_package_id_fk")
@@ -94,15 +117,15 @@ model Booking {
 }
 
 model Review {
- id          Int      @id @default(autoincrement())
- userId      Int      @map("user_id")
- user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- packageId   Int      @map("package_id")
- package     Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
- rating Decimal @db.Decimal(2,1)
- comment    String?
- createdAt DateTime @default(now()) @map("created_at")
- updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId   Int      @map("package_id")
+  package     Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  rating    Decimal  @db.Decimal(2, 1)
+    comment    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([userId], map: "review_user_id_fk")
   @@index([packageId], map: "review_package_id_fk")
