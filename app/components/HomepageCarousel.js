@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import { CiCalendar, CiLocationOn, CiUser } from "react-icons/ci";
 
 export default function HomepageCarousel() {
   const slides = [
@@ -123,6 +125,47 @@ export default function HomepageCarousel() {
               />
             </svg>
           </button>
+        </div>
+        <div className="p-6 bg-gray-100 shadow-md relative z-20 rounded-xl mx-2 sm:mx-16 mt-2 sm:-mt-32 ">
+          <div className="bg-white  p-4 rounded-xl flex flex-col sm:flex-row justify-center gap-4 items-center">
+            <div className="flex items-center w-full sm:w-auto">
+              <CiLocationOn className="text-gray-700 text-xl mr-2" />
+              <input
+                type="text"
+                placeholder="Location"
+                className="bg-transparent border-none placeholder:text-gray-500 focus:ring-0 focus:outline-none w-full"
+              />
+            </div>
+            <div className="flex items-center w-full sm:w-auto">
+              <CiCalendar className="text-gray-700 text-xl mr-2" />
+              <input
+                type="text"
+                placeholder="Check In"
+                className="bg-transparent border-none placeholder:text-gray-500 focus:ring-0 focus:outline-none w-full"
+              />
+            </div>
+            <div className="flex items-center w-full sm:w-auto">
+              <CiCalendar className="text-gray-700 text-xl mr-2" />
+              <input
+                type="text"
+                placeholder="Check Out"
+                className="bg-transparent border-none placeholder:text-gray-500 focus:ring-0 focus:outline-none w-full"
+              />
+            </div>
+
+            <div className="flex items-center w-full sm:w-auto">
+              <CiUser className="text-gray-700 text-xl mr-2" />
+              <input
+                type="number"
+                placeholder="Guests"
+                className="bg-transparent border-none placeholder:text-gray-500 focus:ring-0 focus:outline-none w-full"
+              />
+            </div>
+
+            <button className="bg-blue-500 text-white p-2 rounded-full text-center">
+              <BsSearch />
+            </button>
+          </div>
         </div>
       </section>
     </>
