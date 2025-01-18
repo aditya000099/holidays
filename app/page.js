@@ -1,9 +1,13 @@
 "use client";
+
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { CiLocationOn, CiCalendar, CiUser } from "react-icons/ci";
 import { BsStarFill, BsSearch } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useRouter } from "next/navigation";
+import Auth from "./auth/page";
+import CountryPackages from "./components/CountryPackages";
 
 export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState("Thailand");
@@ -16,6 +20,7 @@ export default function Home() {
   const [packages, setPackages] = useState([]);
   const [selectedCountryData, setSelectedCountryData] = useState(null);
   const [selectedCityData, setSelectedCityData] = useState(null);
+  const router = useRouter();
 
   const packagesData = {
     Thailand: ["Bangkok", "Phuket", "Chiang Mai"],
@@ -40,6 +45,7 @@ export default function Home() {
       title: "Explore Thailand's Wonders",
       description:
         "Discover ancient temples, vibrant markets, and stunning beaches. Experience the magic of Thailand.",
+      country: "Thailand",
       price: "₹29999",
     },
     {
@@ -47,35 +53,40 @@ export default function Home() {
       title: "Journey Through Incredible India",
       description:
         "Immerse yourself in the rich culture, diverse landscapes, and spiritual heritage of India.",
+      country: "India",
       price: "₹89999",
     },
-    {
-      image: "/newyork.jpg",
-      title: "Experience the Energy of New York",
-      description:
-        "Discover iconic landmarks, world-class dining, and vibrant city life in the Big Apple.",
-      price: "₹99999",
-    },
-    {
-      image: "/london.jpg",
-      title: "Step into History in London",
-      description:
-        "Explore historical sites, museums, and experience the lively atmosphere of this iconic city",
-      price: "₹119999",
-    },
+    // {
+    //   image: "/newyork.jpg",
+    //   title: "Experience the Energy of New York",
+    //   description:
+    //     "Discover iconic landmarks, world-class dining, and vibrant city life in the Big Apple.",
+    //   country: "newyork",
+    //   price: "₹99999",
+    // },
+    // {
+    //   image: "/london.jpg",
+    //   title: "Step into History in London",
+    //   description:
+    //     "Explore historical sites, museums, and experience the lively atmosphere of this iconic city",
+    //   country: "london",
+    //   price: "₹119999",
+    // },
     {
       image: "/sydney.jpg",
       title: "Visit Sydney",
       description:
         "Discover this iconic city, amazing landscapes, and beautiful beaches",
+      country: "Australia",
       price: "₹129999",
     },
-    {
-      image: "/paris.jpg",
-      title: "Explore Paris",
-      description: "Explore the city of Love with the most romantic sites",
-      price: "₹139999",
-    },
+    // {
+    //   image: "/paris.jpg",
+    //   title: "Explore Paris",
+    //   description: "Explore the city of Love with the most romantic sites",
+    //   country: "paris",
+    //   price: "₹139999",
+    // },
     // Add more slides as you want
   ];
 
@@ -165,16 +176,15 @@ export default function Home() {
   };
 
   const handleCountryClick = (country) => {
-    setSelectedCountryData(country);
-    setSelectedCityData(null);
+    router.push(`/countries/${country.name}`);
+  };
+  const handleCarouselClick = (slide) => {
+    router.push(`/countries/${slide.country}`);
   };
 
   const handleCityClick = (city) => {
     setSelectedCityData(city);
   };
-  // const handleCountry = (country) => {
-  //   window.location.href = `/${country}`;
-  // };
 
   const filteredCities = selectedCountryData
     ? cities.filter((city) => city.countryId === selectedCountryData.id)
@@ -250,17 +260,21 @@ export default function Home() {
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {slides.map((slide, index) => (
-              <div key={index} className="w-full flex-shrink-0 relative">
+              <div
+                key={index}
+                className="w-full flex-shrink-0 relative cursor-pointer"
+                onClick={() => handleCarouselClick(slide)}
+              >
                 <Image
-                  className="w-full h-full sm:h-[90vh] object-cover"
+                  className="w-full h-full sm:h-[100vh] object-cover"
                   src={slide.image}
                   alt={slide.title}
-                  width={120000}
-                  height={120000}
+                  width={1200}
+                  height={600}
                 />
                 <div className="absolute top-20 sm:top-16 mx-2 rounded-xl  text-white p-4 w-fit">
-                  <div className="bg-gradient-to-t from-white/20 rounded-full to-transparent bg-opacity-50  p-4">
-                    <h2 className="text-md sm:text-xl font-regular">
+                  <div className="bg-gradient-to-t from-white/20 rounded-full to-transparent bg-opacity-50 p-4">
+                    <h2 className="text-md sm:text-xl font-medium">
                       {slide.title}
                     </h2>
                   </div>
@@ -314,8 +328,8 @@ export default function Home() {
           </div>
         </section>
         {/* Booking Form */}
-        <div className="p-6 bg-gray-100 shadow-md relative z-20 rounded-xl mx-2 sm:mx-16 mt-2 sm:-mt-32">
-          <div className="bg-white p-4 rounded-xl flex flex-col sm:flex-row justify-center items-center gap-4">
+        <div className="p-6 bg-gray-100 shadow-md relative z-20 rounded-xl mx-2 sm:mx-16 mt-2 sm:-mt-32 ">
+          <div className="bg-white  p-4 rounded-xl flex flex-col sm:flex-row justify-center items-center gap-4 items-center">
             <div className="flex items-center w-full sm:w-auto">
               <CiLocationOn className="text-gray-700 text-xl mr-2" />
               <input
@@ -340,6 +354,7 @@ export default function Home() {
                 className="bg-transparent border-none placeholder:text-gray-500 focus:ring-0 focus:outline-none w-full"
               />
             </div>
+
             <div className="flex items-center w-full sm:w-auto">
               <CiUser className="text-gray-700 text-xl mr-2" />
               <input
@@ -358,174 +373,15 @@ export default function Home() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
             Explore Destinations
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
+          <div className="flex flex-col gap-8 px-2 sm:px-20">
             {countries.map((country) => (
-              <div
+              <CountryPackages
                 key={country.id}
-                className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
-                onClick={() => handleCountryClick(country)}
-              >
-                <div className="py-4">
-                  <h3
-                    className="text-xl font-extrabold text-gray-800 text-center"
-                    onClick={() => {
-                      window.open(
-                        `/countries/${country.name}`,
-                        "_blank",
-                        "noopener,noreferrer"
-                      );
-                    }}
-                  >
-                    {country.name}
-                  </h3>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
-            {selectedCountryData ? (
-              filteredCities.length > 0 ? (
-                filteredCities.map((city) => (
-                  <div
-                    key={city.id}
-                    className="relative overflow-hidden rounded-lg transition-shadow duration-300 group cursor-pointer"
-                    onClick={() => handleCityClick(city)}
-                  >
-                    <div className="py-4">
-                      <h3 className="text-xl font-semibold text-gray-800 text-center">
-                        {city.name}
-                      </h3>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-600 text-center">
-                  No cities to show for {selectedCountryData.name}
-                </p>
-              )
-            ) : (
-              <p className="text-gray-600 text-center">
-                Click on a country to show cities
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-2 sm:px-20">
-            {selectedCityData ? (
-              filteredPackages.length > 0 ? (
-                filteredPackages.map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 group"
-                  >
-                    <div className="py-4">
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        {pkg.title}
-                      </h3>
-                      <p className="text-gray-600">From ₹{pkg.price}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-600 text-center">
-                  No Packages to show for {selectedCityData.name}
-                </p>
-              )
-            ) : (
-              <p className="text-gray-600 text-center">
-                Click on a city to show packages.
-              </p>
-            )}
-          </div>
-        </section>
-
-        <section className="mb-8 p-6 sm:p-20">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 text-center mb-12">
-            Popular Destinations
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2 sm:px-20">
-            {/* Here is the card */}
-            {Object.keys(ratings).map((city) => (
-              <div
-                key={city}
-                className="relative overflow-hidden rounded-lg transition-shadow duration-300 group"
-              >
-                <div className="relative aspect-square">
-                  <Image
-                    src={`/${city.toLowerCase()}.jpg`}
-                    alt={city}
-                    fill
-                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
-                    className="object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute top-2 right-2 bg-gray-900 bg-opacity-70 rounded-md p-1 flex items-center text-white text-xs">
-                  {ratings[city]}
-                  <BsStarFill className="ml-1" />
-                </div>
-                <div className="py-4">
-                  <h3 className="text-xl font-extrabold text-gray-800">
-                    {city},{" "}
-                    {city === "Bangkok"
-                      ? "Thailand"
-                      : city === "Goa"
-                      ? "India"
-                      : city === "New York"
-                      ? "USA"
-                      : "UK"}
-                  </h3>
-                  <p className="text-gray-600">
-                    From ₹
-                    {city === "Bangkok"
-                      ? "799"
-                      : city === "Goa"
-                      ? "899"
-                      : city === "New York"
-                      ? "999"
-                      : "1199"}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Filter by Country */}
-        <section className="filter-by-country p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Filter by Country
-          </h2>
-          <select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            className="p-2 border rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            {Object.keys(packagesData).map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-          <div className="city-packages grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {packagesData[selectedCountry].map((city) => (
-              <div
-                key={city}
-                className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-              >
-                <Image
-                  src={`/${city.toLowerCase()}.jpg`}
-                  alt={city}
-                  width={400}
-                  height={300}
-                  className="object-cover w-full h-60"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    {city}
-                  </h3>
-                  <p className="text-gray-600">From ₹799</p>
-                </div>
-              </div>
+                country={country}
+                packages={packages.filter(
+                  (pkg) => pkg.city.countryId === country.id
+                )}
+              />
             ))}
           </div>
         </section>
@@ -536,5 +392,65 @@ export default function Home() {
         </p>
       </footer>
     </div>
+  );
+}
+
+function PackageList({ countryName, packages }) {
+  const router = useRouter();
+
+  const handlePackageClick = (pkg) => {
+    router.push(
+      `/countries/${pkg.city.country.name}/${pkg.city.name.toLowerCase()}/${
+        pkg.id
+      }`
+    );
+  };
+  return (
+    <>
+      {packages.length > 0 ? (
+        packages.map((pkg) => (
+          <div
+            key={pkg.id}
+            className="relative overflow-hidden rounded-2xl group cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300"
+            onClick={() => handlePackageClick(pkg)}
+          >
+            <div className="relative aspect-square overflow-hidden">
+              {pkg.images && pkg.images.length > 0 ? (
+                <Image
+                  src={pkg.images[0].imageUrl}
+                  alt={`Image for ${pkg.title}`}
+                  fill
+                  sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
+                />
+              ) : (
+                <Image
+                  src={"/munnar.jpg"}
+                  alt={"package photo"}
+                  fill
+                  sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                  className="object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                />
+              )}
+            </div>
+
+            <div className="p-4">
+              <h3 className="text-xl font-semibold text-gray-800 truncate">
+                {pkg.title}
+              </h3>
+              <p className="text-gray-600 truncate overflow-hidden text-ellipsis whitespace-nowrap mb-2 max-h-[2.8rem]">
+                {pkg.description}
+              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-gray-600">From ₹{pkg.price}</p>
+                <p className="text-gray-600 text-sm">{pkg.durationDays} Days</p>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="text-gray-600 text-center">No Packages found</p>
+      )}
+    </>
   );
 }
