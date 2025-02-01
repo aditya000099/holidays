@@ -195,7 +195,7 @@ export default function PackagePage() {
             )}
           </div>
         ) : (
-          <p>Loading...</p>
+          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">Loading...</div>
         )}
       </div>
     </div>

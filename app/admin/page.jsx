@@ -5,7 +5,6 @@ import AddCountry from "../components/admin/AddCountry";
 import AddCity from "../components/admin/AddCity";
 import AddPackage from "../components/admin/AddPackage";
 import PackageList from "../components/admin/PackageList";
-import prisma from "@/prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminSidebar from "../components/admin/AdminSidebar";
@@ -21,7 +20,6 @@ export default function AdminPanel() {
   const [isAdmin, setIsAdmin] = useState(null);
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
-
   const contentRef = useRef(null);
   const [isContentScrolling, setIsContentScrolling] = useState(false);
 
@@ -35,7 +33,6 @@ export default function AdminPanel() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -82,7 +79,6 @@ export default function AdminPanel() {
     };
     fetchCountriesAndCities();
   }, []);
-
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth");
@@ -94,7 +90,7 @@ export default function AdminPanel() {
   }, [status, router, isAdmin]);
 
   if (status === "loading" || isAdmin === null) {
-    return <p>Loading...</p>;
+    return <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">Loading...</div>;
   }
 
   if (status === "unauthenticated" || isAdmin === false) {
@@ -132,13 +128,14 @@ export default function AdminPanel() {
         );
     }
   };
+
   return (
     <div className="min-h-screen font-[family-name:var(--font-geist-sans)] flex">
       <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
-      <AdminSidebar paddingTop="mt-20 fixed left-0" />
+      <AdminSidebar paddingTop="mt-20" />
       <div
         ref={contentRef}
-        className={`container mr-20 mx-auto p-6 sm:p-20 flex-1  ${
+        className={`container mx-auto p-6 sm:p-20 flex-1  ${
           isContentScrolling ? "overflow-y-scroll" : ""
         }`}
       >
