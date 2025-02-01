@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import AddCountry from "../components/admin/AddCountry";
 import AddCity from "../components/admin/AddCity";
 import AddPackage from "../components/admin/AddPackage";
@@ -20,6 +20,7 @@ export default function AdminPanel() {
   const [isAdmin, setIsAdmin] = useState(null);
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
+
   const contentRef = useRef(null);
   const [isContentScrolling, setIsContentScrolling] = useState(false);
 
@@ -33,6 +34,7 @@ export default function AdminPanel() {
     };
 
     window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -90,7 +92,22 @@ export default function AdminPanel() {
   }, [status, router, isAdmin]);
 
   if (status === "loading" || isAdmin === null) {
-    return <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">Loading...</div>;
+    return (
+      <div className="min-h-screen font-[family-name:var(--font-geist-sans)] flex">
+        <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
+        <AdminSidebar paddingTop="mt-20" />
+        <div
+          ref={contentRef}
+          className={`container mx-auto p-6 sm:p-20 flex-1  ${
+            isContentScrolling ? "overflow-y-scroll" : ""
+          }`}
+        >
+          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (status === "unauthenticated" || isAdmin === false) {
