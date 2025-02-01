@@ -19,7 +19,7 @@ export default function MyAccount() {
         <p className="text-gray-600">You are not logged in.</p>
         <button
           onClick={() => router.push("/auth")}
-          className="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded mt-4"
+          className="bg-indigo-500 hover:bg-indigo-400 text-white p-2 rounded mt-4"
         >
           Log In
         </button>

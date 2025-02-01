@@ -143,7 +143,7 @@ export default function AddPackage({ countries, cities }) {
              <select
                 value={selectedCountry}
                 onChange={(e) => setSelectedCountry(e.target.value)}
-                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
              >
                <option value="">Select Country</option>
                {countries?.map((country) => (
@@ -155,7 +155,7 @@ export default function AddPackage({ countries, cities }) {
             <select
                 value={cityName}
                  onChange={(e) => setCityName(e.target.value)}
-                  className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                    disabled={!selectedCountry}
                  >
                     <option value="">Select City</option>
@@ -170,27 +170,27 @@ export default function AddPackage({ countries, cities }) {
                  placeholder="Package Title"
                 value={title}
                  onChange={(e) => setTitle(e.target.value)}
-                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                />
             <textarea
                 placeholder="Package Description"
                value={description}
                onChange={(e) => setDescription(e.target.value)}
-                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                  />
              <input
                 type="number"
                   placeholder="Price"
                    value={price}
                    onChange={(e) => setPrice(e.target.value)}
-                  className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                    />
             <input
                 type="number"
                 placeholder="Duration Days"
                   value={durationDays}
                   onChange={(e) => setDurationDays(e.target.value)}
-                 className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                 className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                />
               <div className="mb-4">
                      <h3 className="font-semibold text-gray-700">Highlights</h3>
@@ -201,7 +201,7 @@ export default function AddPackage({ countries, cities }) {
                                     updatedHighlights[index] = e.target.value;
                                       setHighlights(updatedHighlights);
                                   }}
-                                  placeholder="Highlight" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex-1"/>
+                                  placeholder="Highlight" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1"/>
                             {highlights.length > 1 && (
                               <button type="button" onClick={() => handleRemoveItem(setHighlights, index)} className="bg-red-500 text-white p-2 rounded" >
                                  <BsFillTrashFill className="h-4 w-4"/>
@@ -209,7 +209,7 @@ export default function AddPackage({ countries, cities }) {
                             )}
                           </div>
                       ))}
-                      <button type="button"  onClick={() => handleAddItem(setHighlights)} className="text-blue-500 hover:text-blue-400 flex items-center gap-2">
+                      <button type="button"  onClick={() => handleAddItem(setHighlights)} className="text-indigo-500 hover:text-indigo-400 flex items-center gap-2">
                         <BsFillPlusCircleFill className="h-4 w-4"/> Add More
                       </button>
               </div>
@@ -222,7 +222,7 @@ export default function AddPackage({ countries, cities }) {
                               updatedInclusions[index] = e.target.value;
                             setInclusions(updatedInclusions);
                              }}
-                           placeholder="Inclusion" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex-1"/>
+                           placeholder="Inclusion" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1"/>
                           {inclusions.length > 1 && (
                              <button type="button" onClick={() => handleRemoveItem(setInclusions, index)} className="bg-red-500 text-white p-2 rounded" >
                                <BsFillTrashFill className="h-4 w-4"/>
@@ -230,7 +230,7 @@ export default function AddPackage({ countries, cities }) {
                            )}
                       </div>
                     ))}
-                  <button type="button"  onClick={() => handleAddItem(setInclusions)} className="text-blue-500 hover:text-blue-400 flex items-center gap-2">
+                  <button type="button"  onClick={() => handleAddItem(setInclusions)} className="text-indigo-500 hover:text-indigo-400 flex items-center gap-2">
                        <BsPlusCircleFill className="h-4 w-4"/> Add More
                      </button>
                 </div>
@@ -243,7 +243,7 @@ export default function AddPackage({ countries, cities }) {
                                     updatedExclusions[index] = e.target.value;
                                     setExclusions(updatedExclusions);
                                   }}
-                                      placeholder="Exclusion" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex-1"/>
+                                      placeholder="Exclusion" className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1"/>
                                      {exclusions.length > 1 && (
                                        <button type="button" onClick={() => handleRemoveItem(setExclusions, index)} className="bg-red-500 text-white p-2 rounded" >
                                          <BsFillTrashFill className="h-4 w-4"/>
@@ -251,7 +251,7 @@ export default function AddPackage({ countries, cities }) {
                                     )}
                              </div>
                           ))}
-                         <button type="button"  onClick={() => handleAddItem(setExclusions)} className="text-blue-500 hover:text-blue-400 flex items-center gap-2">
+                         <button type="button"  onClick={() => handleAddItem(setExclusions)} className="text-indigo-500 hover:text-indigo-400 flex items-center gap-2">
                            <BsPlusCircleFill className="h-4 w-4"/> Add More
                        </button>
                    </div>
@@ -273,14 +273,14 @@ export default function AddPackage({ countries, cities }) {
                                            onChange={(e) => handleItineraryChange(index, 'description', e.target.value)}
                                             className="border p-1 rounded mb-2 w-full"
                                           />
-                                      <input
+                                      {/* <input
                                            type="file"
                                             accept="image/*"
                                            onChange={(e) => {
                                                 handleItineraryChange(index, "image", e.target.files[0]);
                                           }}
                                          className="border p-1 rounded mb-2 w-full"
-                                         />
+                                         /> */}
                                     {itinerary.length > 1 && (
                                     <button type="button" onClick={() => handleRemoveItineraryItem(index)} className="bg-red-500 text-white p-2 rounded" >
                                      <BsFillTrashFill className="h-4 w-4"/>
@@ -288,7 +288,7 @@ export default function AddPackage({ countries, cities }) {
                                    )}
                                </div>
                         ))}
-                       <button type="button" onClick={handleAddItineraryItem} className="text-blue-500 hover:text-blue-400 flex items-center gap-2">
+                       <button type="button" onClick={handleAddItineraryItem} className="text-indigo-500 hover:text-indigo-400 flex items-center gap-2">
                        <BsPlusCircleFill className="h-4 w-4"/> Add More
                        </button>
                    </div>
@@ -300,7 +300,7 @@ export default function AddPackage({ countries, cities }) {
                    accept="image/*"
                     onChange={handleImageChange}
                      multiple
-                   className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
                   <div className="flex flex-wrap gap-2">
@@ -324,7 +324,7 @@ export default function AddPackage({ countries, cities }) {
                    </div>
                  <button
                      type="submit"
-                    className={`bg-blue-500 text-white p-2 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'}`}
+                    className={`bg-indigo-500 text-white p-2 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-400'}`}
                   disabled={loading}
                 >
                   {loading ? 'Adding...' : 'Add Package'}

@@ -46,7 +46,7 @@ export default function AddCity({countries}) {
                 <select
                     value={countryName}
                     onChange={(e) => setCountryName(e.target.value)}
-                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                  >
                     <option value="">Select Country</option>
                     {countries.map((country) => (
@@ -60,11 +60,11 @@ export default function AddCity({countries}) {
                      placeholder="City Name"
                     value={name}
                      onChange={(e) => setName(e.target.value)}
-                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 <button
                     type="submit"
-                     className={`bg-blue-500 text-white p-2 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'}`}
+                     className={`bg-indigo-500 text-white p-2 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-400'}`}
                     disabled={loading}
                 >
                      {loading ? 'Adding...' : 'Add City'}

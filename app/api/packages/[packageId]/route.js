@@ -50,3 +50,31 @@ export async function DELETE(req, { params }) {
     );
   }
 }
+export async function GET(req, { params }) {
+  try {
+    const { packageId } = await params;
+    const pkg = await prisma.package.findUnique({
+      where: {
+        id: parseInt(packageId),
+      },
+      include: {
+        city: true,
+        images: true,
+        itinerary: true,
+      },
+    });
+    if (!pkg) {
+      return NextResponse.json(
+        { message: `Package with id '${packageId}' not found` },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(pkg, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching a specific package:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

@@ -162,7 +162,7 @@ export default function HomepageCarousel() {
               />
             </div>
 
-            <button className="bg-blue-500 text-white p-2 rounded-full text-center">
+            <button className="bg-indigo-500 text-white p-2 rounded-full text-center">
               <BsSearch />
             </button>
           </div>

@@ -92,14 +92,14 @@ export default function Auth() {
                      placeholder="First Name"
                     value={firstName}
                      onChange={(e) => setFirstName(e.target.value)}
-                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                    />
                     <input
                        type="text"
                         placeholder="Last Name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                     className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                     className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                    />
                    </>
                )}
@@ -109,23 +109,23 @@ export default function Auth() {
                  placeholder="Email"
                   value={email}
                  onChange={(e) => setEmail(e.target.value)}
-               className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
                <input
                 type="password"
                  placeholder="Password"
                  value={password}
                 onChange={(e) => setPassword(e.target.value)}
-               className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               className="border p-2 rounded text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded"
+                className="bg-indigo-500 hover:bg-indigo-400 text-white p-2 rounded"
                  >
                    {isSignup ? "Sign Up" : "Log In"}
                 </button>
            </form>
-            <button onClick={() => setIsSignup(!isSignup)} className="text-blue-500 hover:text-blue-400 mt-2 block mx-auto" >
+            <button onClick={() => setIsSignup(!isSignup)} className="text-indigo-500 hover:text-indigo-400 mt-2 block mx-auto" >
              {isSignup ? "Already have an account? Log In" : "Create an Account"}
             </button>
          </div>
