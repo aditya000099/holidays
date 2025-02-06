@@ -249,7 +249,7 @@ export default function PackageList() {
                                          pkg.nights
                                        )}
                              </td>
-                             <td  className="px-6 py-4 whitespace-nowrap">
+                             {/* <td  className="px-6 py-4 whitespace-nowrap">
                                 {pkg.images && pkg.images.length > 0 ? (
                                        <div className="flex items-center gap-2">
                                            {pkg.images.map((img, index) => (
@@ -268,7 +268,7 @@ export default function PackageList() {
                                      ) : (
                                        <p>No images</p>
                                       )}
-                             </td>
+                             </td> */}
                            <td className="px-6 py-4 whitespace-nowrap flex gap-2">
                                {editingPackageId === pkg.id ? (
                                  <button onClick={handleCancelEdit} className="bg-red-500 hover:bg-red-400 text-white p-2 rounded">
@@ -310,7 +310,7 @@ export default function PackageList() {
                        <div className="mb-4">
                          <input type="file" accept="image/*" multiple onChange={handleImageChange} className="border p-1 rounded w-full mb-2"/>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              {previewImages.map((previewUrl, index) => (
+                              {/* {previewImages.map((previewUrl, index) => (
                                  <div key={index} className="relative overflow-hidden rounded-md">
                                   <Image
                                        src={previewUrl}
@@ -326,7 +326,7 @@ export default function PackageList() {
                                         <BsFillTrashFill className="h-4 w-4"/>
                                        </button>
                                  </div>
-                              ))}
+                              ))} */}
                            </div>
                   </div>
                   <div className="flex justify-end mt-4">
