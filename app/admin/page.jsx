@@ -161,3 +161,5 @@ export default function AdminPanel() {
     </div>
   );
 }
+
+// no cache of fetched data
