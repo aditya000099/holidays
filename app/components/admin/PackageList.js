@@ -41,7 +41,11 @@ export default function PackageList() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch(`/api/packages`);
+        const response = await fetch(`/api/packages`, {
+          next: {
+            revalidate: 360, // 6 mins
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setPackages(data);
@@ -123,11 +127,17 @@ export default function PackageList() {
           days: Number(editDays),
           nights: editNights,
         }),
+        next: {
+          revalidate: 360, // 6 mins
+        },
       });
       const res2 = await fetch(`/api/packages/${pkgId}/images`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ images: imageUrls }),
+        next: {
+          revalidate: 360, // 6 mins
+        },
       });
       if (res.ok && res2.ok) {
         console.log("Succesfully updated the package");

@@ -31,7 +31,11 @@ export default function PackagePage() {
   useEffect(() => {
     const fetchPackageData = async () => {
       try {
-        const response = await fetch(`/api/packages?cityId=${cityName}`);
+        const response = await fetch(`/api/packages?cityId=${cityName}`,{
+          next: {
+          revalidate: 360, // 6 mins
+        },
+        });
         if (response.ok) {
           const data = await response.json();
           const filteredPackage = data.find(

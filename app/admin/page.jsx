@@ -45,6 +45,9 @@ export default function AdminPanel() {
       if (status === "authenticated") {
         const res = await fetch(`/api/admin/check`, {
           method: "GET",
+          next: {
+      revalidate: 360, // 6 mins
+    },
         });
         if (res.ok) {
           const data = await res.json();

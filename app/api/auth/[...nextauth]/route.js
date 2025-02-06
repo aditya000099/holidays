@@ -20,6 +20,9 @@ export const authOptions = {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(credentials),
+          next: {
+            revalidate: 360, // 6 mins
+          },
         });
         //  console.log("Result from the login endpoint", {res})
         if (res.ok) {
