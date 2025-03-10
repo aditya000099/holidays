@@ -31,10 +31,10 @@ export default function PackagePage() {
   useEffect(() => {
     const fetchPackageData = async () => {
       try {
-        const response = await fetch(`/api/packages?cityId=${cityName}`,{
+        const response = await fetch(`/api/packages?cityId=${cityName}`, {
           next: {
-          revalidate: 360, // 6 mins
-        },
+            revalidate: 360, // 6 mins
+          },
         });
         if (response.ok) {
           const data = await response.json();
@@ -93,25 +93,40 @@ export default function PackagePage() {
 
             {/* Image Carousel */}
             <div className="relative overflow-hidden rounded-lg shadow-md mb-4">
-              <Image
-                src={pkg.images[currentImageIndex].imageUrl}
-                alt={`Image for ${pkg.title}`}
-                width={1200}
-                height={1200}
-                className="object-cover w-full h-[28rem]"
-              />
-              <button
-                onClick={handlePrevImage}
-                className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
-              >
-                <MdChevronLeft className="h-6 w-6" />
-              </button>
-              <button
-                onClick={handleNextImage}
-                className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
-              >
-                <MdChevronRight className="h-6 w-6" />
-              </button>
+              {pkg.images && pkg.images.length > 0 ? (
+                <>
+                  <Image
+                    src={
+                      pkg.images[currentImageIndex]?.imageUrl ||
+                      "/placeholder-image.jpg"
+                    }
+                    alt={`Image for ${pkg.title}`}
+                    width={1200}
+                    height={1200}
+                    className="object-cover w-full h-[28rem]"
+                  />
+                  {pkg.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={handlePrevImage}
+                        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
+                      >
+                        <MdChevronLeft className="h-6 w-6" />
+                      </button>
+                      <button
+                        onClick={handleNextImage}
+                        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
+                      >
+                        <MdChevronRight className="h-6 w-6" />
+                      </button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <div className="w-full h-[28rem] bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500">No images available</span>
+                </div>
+              )}
             </div>
 
             {/* Package Info */}
@@ -199,7 +214,9 @@ export default function PackagePage() {
             )}
           </div>
         ) : (
-          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">Loading...</div>
+          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">
+            Loading...
+          </div>
         )}
       </div>
     </div>
