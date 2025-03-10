@@ -9,14 +9,19 @@ import HomepageCarousel from "./components/HomepageCarousel";
 import prisma from "@/prisma/client";
 
 export default async function Home() {
-  const countries = await prisma.country.findMany();
-  const cities = await prisma.city.findMany();
+  const countries = await prisma.country.findMany({
+    cache: "no-store",
+  });
+  const cities = await prisma.city.findMany({
+    cache: "no-store",
+  });
   let packages = await prisma.package.findMany({
     include: {
       city: true,
       images: true,
       itinerary: true,
     },
+    cache: "no-store",
   });
   packages = packages.map((pkg) => ({
     ...pkg,
