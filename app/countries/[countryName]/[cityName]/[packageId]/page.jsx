@@ -3,14 +3,16 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+// Replace FA icons with Lucide
 import {
-  FaMapMarkerAlt,
-  FaClock,
-  FaRupeeSign,
-  FaRegCalendarAlt,
-  FaCheckCircle,
-} from "react-icons/fa";
+  MapPin,
+  Clock,
+  IndianRupee,
+  Calendar,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import Navbar from "@/app/components/navbar";
 import ContactForm from "@/app/components/ContactForm";
 import {
@@ -63,162 +65,233 @@ export default function PackagePage() {
   };
 
   return (
-    <div className="font-geist-sans">
+    <div className="font-geist-sans relative">
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full">
+          {/* Top right circle */}
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-50" />
+          {/* Bottom left circle */}
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-50 rounded-full blur-3xl opacity-50" />
+        </div>
+      </div>
+
       <Navbar
         textColor={"text-gray-800"}
         blurredTextColor={"text-black"}
         blurBehavior={"always"}
       />
-      <div className="p-6 sm:mx-60 sm:py-20 border">
-        {pkg ? (
-          <div className="bg-white rounded-lg   p-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                {pkg.title}
-              </h2>
-              {/* Book Package Button with Modal */}
 
-              <button
-                className="bg-indigo-500 text-white px-6 py-1 rounded-xl hover:bg-indigo-600 transition-colors"
-                onClick={() => setIsOpen(true)}
-              >
-                Enquire now
-              </button>
-              <ContactForm
-                packageId={packageId}
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-              />
-            </div>
+      {pkg ? (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative">
+          {/* Vertical Lines - Desktop Only */}
+          <div className="hidden lg:block">
+            <div
+              className="fixed top-0 left-0 w-px h-screen bg-gradient-to-b from-transparent via-gray-200 to-transparent opacity-30"
+              style={{ left: "15%" }}
+            />
+            <div
+              className="fixed top-0 right-0 w-px h-screen bg-gradient-to-b from-transparent via-gray-200 to-transparent opacity-30"
+              style={{ right: "15%" }}
+            />
+          </div>
 
-            {/* Image Carousel */}
-            <div className="relative overflow-hidden rounded-lg shadow-md mb-4">
-              {pkg.images && pkg.images.length > 0 ? (
-                <>
-                  <Image
-                    src={
-                      pkg.images[currentImageIndex]?.imageUrl ||
-                      "/placeholder-image.jpg"
-                    }
-                    alt={`Image for ${pkg.title}`}
-                    width={1200}
-                    height={1200}
-                    className="object-cover w-full h-[28rem]"
-                  />
-                  {pkg.images.length > 1 && (
-                    <>
-                      <button
-                        onClick={handlePrevImage}
-                        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
-                      >
-                        <MdChevronLeft className="h-6 w-6" />
-                      </button>
-                      <button
-                        onClick={handleNextImage}
-                        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-gray-700 hover:bg-gray-600 rounded-full p-2 text-white"
-                      >
-                        <MdChevronRight className="h-6 w-6" />
-                      </button>
-                    </>
-                  )}
-                </>
-              ) : (
-                <div className="w-full h-[28rem] bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500">No images available</span>
-                </div>
-              )}
-            </div>
+          {/* Hero Section */}
+          <div className="relative overflow-hidden rounded-2xl shadow-lg mb-8 sm:mt-20 mt-10 max-w-5xl mx-auto">
+            {pkg.images && pkg.images.length > 0 ? (
+              <>
+                <Image
+                  src={
+                    pkg.images[currentImageIndex]?.imageUrl ||
+                    "/placeholder-image.jpg"
+                  }
+                  alt={`Image for ${pkg.title}`}
+                  width={1920}
+                  height={1080}
+                  className="object-cover w-full h-[40vh] md:h-[60vh]"
+                  priority
+                />
+                {/* Side Fade Effects */}
+                <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/20 to-transparent" />
+                <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/20 to-transparent" />
 
-            {/* Package Info */}
-            <p className="text-gray-600 mb-4">{pkg.description}</p>
-            <div className="flex items-center gap-4 text-gray-700 mb-4">
-              <FaMapMarkerAlt className="text-xl" /> <span>{pkg.location}</span>
-              <FaClock className="text-xl" />{" "}
-              <span>{pkg.durationDays} days</span>
-              <FaRupeeSign className="text-xl" /> <span>{pkg.price}</span>
-            </div>
+                {/* Bottom Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
 
-            {/* Day-wise Itinerary */}
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Itinerary:
-              </h3>
-              {pkg.itinerary?.map((item, index) => (
-                <div
-                  key={index}
-                  className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50"
-                >
-                  <h4 className="text-lg font-medium text-gray-700">
-                    Day {item.day}: {item.title}
-                  </h4>
-                  <p className="text-gray-600">{item.description}</p>
-                  {item.image && (
-                    <div className="relative overflow-hidden rounded-lg shadow-sm mt-2">
-                      <Image
-                        src={item.image}
-                        alt={`Itinerary Image`}
-                        width={300}
-                        height={200}
-                        className="object-cover w-full h-48"
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                {/* Navigation Buttons */}
+                {pkg.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 p-2 rounded-full transition-all group"
+                    >
+                      <ChevronLeft className="w-6 h-6 text-white" />
+                    </button>
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 p-2 rounded-full transition-all group"
+                    >
+                      <ChevronRight className="w-6 h-6 text-white" />
+                    </button>
+                  </>
+                )}
 
-            {/* Highlights */}
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Highlights:
-              </h3>
-              <ul className="list-disc list-inside text-gray-700">
-                {pkg.highlights?.map((highlight, index) => (
-                  <li key={index}>
-                    <FaCheckCircle className="inline text-green-500 mr-2" />
-                    {highlight}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Inclusions */}
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Inclusions:
-              </h3>
-              <ul className="list-disc list-inside text-gray-700">
-                {pkg.inclusions?.map((inclusion, index) => (
-                  <li key={index}>
-                    <FaCheckCircle className="inline text-blue-500 mr-2" />
-                    {inclusion}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Exclusions */}
-            {pkg.exclusions?.length > 0 && pkg.exclusions != "" && (
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold text-gray-800">
-                  Exclusions:
-                </h3>
-                <ul className="list-disc list-inside text-gray-700">
-                  {pkg.exclusions?.map((exclusion, index) => (
-                    <li key={index}>
-                      {/* <FaCheckCircle className="inline text-blue-500 mr-2" /> */}
-                      {exclusion}
-                    </li>
+                {/* Image Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                  {pkg.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        currentImageIndex === idx
+                          ? "bg-white w-4"
+                          : "bg-white/50 hover:bg-white/75"
+                      }`}
+                      onClick={() => setCurrentImageIndex(idx)}
+                    />
                   ))}
-                </ul>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-[40vh] md:h-[60vh] bg-gray-100 flex items-center justify-center">
+                <span className="text-gray-400">No images available</span>
               </div>
             )}
           </div>
-        ) : (
-          <div className="w-full h-screen flex justify-center items-center text-3xl text-bold fade-in-5">
-            Loading...
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-8">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  {pkg.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-6">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-indigo-500" />
+                    <span>{pkg.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-indigo-500" />
+                    <span>{pkg.durationDays} days</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <IndianRupee className="w-5 h-5 text-indigo-500" />
+                    <span className="font-semibold">{pkg.price}</span>
+                  </div>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  {pkg.description}
+                </p>
+              </div>
+
+              {/* Itinerary section with enhanced styling */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <Calendar className="w-6 h-6 text-indigo-500" />
+                  Day-by-Day Itinerary
+                </h2>
+                <div className="space-y-4">
+                  {pkg.itinerary?.map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all"
+                    >
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Day {item.day}: {item.title}
+                      </h3>
+                      <p className="text-gray-600">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-24 space-y-6">
+                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-gray-100">
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                  >
+                    Enquire Now
+                  </button>
+
+                  {/* Highlights */}
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Highlights
+                    </h3>
+                    <ul className="space-y-2">
+                      {pkg.highlights?.map((highlight, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle2 className="text-green-500 mt-1 flex-shrink-0" />
+                          <span className="text-gray-600">{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Inclusions */}
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      What's Included
+                    </h3>
+                    <ul className="space-y-2">
+                      {pkg.inclusions?.map((inclusion, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle2 className="text-indigo-500 mt-1 flex-shrink-0" />
+                          <span className="text-gray-600">{inclusion}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Exclusions */}
+                  {pkg.exclusions?.length > 0 && pkg.exclusions != "" && (
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Not Included
+                      </h3>
+                      <ul className="space-y-2">
+                        {pkg.exclusions?.map((exclusion, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-gray-600"
+                          >
+                            <span className="block w-1 h-1 rounded-full bg-gray-400 mt-2 flex-shrink-0" />
+                            <span>{exclusion}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Mobile Booking Button */}
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-lg lg:hidden z-50">
+            <button
+              onClick={() => setIsOpen(true)}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+            >
+              Enquire Now
+            </button>
+          </div>
+
+          <ContactForm
+            packageId={packageId}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+        </div>
+      ) : (
+        <div className="min-h-screen flex justify-center items-center">
+          <div className="animate-pulse text-2xl text-gray-400">Loading...</div>
+        </div>
+      )}
     </div>
   );
 }
