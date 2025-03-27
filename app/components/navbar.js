@@ -50,7 +50,7 @@ export default function Navbar({ textColor, blurredTextColor, blurBehavior }) {
        `}
     >
       <a href="/" className="text-2xl font-extrabold tracking-wide">
-        Holidays
+        Turbans and Traditions
       </a>
 
       {/* Desktop Navigation */}

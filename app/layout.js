@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Holidays",
-  description: "Bokk your holiday packages and enjoy your holidays",
+  title: "Turban and Traditions",
+  description: "Book your holiday packages and enjoy your holidays",
 };
 
 export default function RootLayout({ children }) {
