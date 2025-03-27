@@ -55,18 +55,21 @@ export default function Navbar({ textColor, blurredTextColor, blurBehavior }) {
 
       {/* Desktop Navigation */}
       <div className="hidden sm:flex space-x-6 text-lg font-medium sm:mr-10">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-indigo-500 text-white px-2 py-1 rounded-xl text-sm hover:bg-indigo-600 transition"
-        >
-          Get in Touch
-        </button>
+        <a href="/about" className="hover:text-indigo-500 transition">
+          About us
+        </a>
         <a href="#" className="hover:text-indigo-500 transition">
           Destinations
         </a>
         <a href="#" className="hover:text-indigo-500 transition">
           Packages
         </a>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-indigo-500 text-white px-2 py-1 rounded-xl text-sm hover:bg-indigo-600 transition"
+        >
+          Get in Touch
+        </button>
       </div>
 
       {/* Mobile Menu Button */}
@@ -79,20 +82,21 @@ export default function Navbar({ textColor, blurredTextColor, blurBehavior }) {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl transform ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-xl transform ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }
            transition-transform duration-300 ease-in-out sm:hidden flex flex-col gap-6 p-6`}
       >
+        <a href="/about" className="hover:text-indigo-500 transition">
+          About Us
+        </a>
         <a href="#" className="hover:text-indigo-500 transition">
           Destinations
         </a>
         <a href="#" className="hover:text-indigo-500 transition">
           Packages
         </a>
-        <a href="#" className="hover:text-indigo-500 transition">
-          About Us
-        </a>
+
         <button
           onClick={() => {
             setIsOpen(true);

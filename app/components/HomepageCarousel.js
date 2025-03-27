@@ -46,7 +46,7 @@ export default function HomepageCarousel() {
           <div key={index} className="w-full flex-shrink-0 relative">
             <div className="absolute inset-0 bg-black opacity-20"></div>
             <Image
-              className="w-full h-full sm:h-[90vh] object-cover duration-1000 ease-in-out"
+              className="w-full h-[60vh] sm:h-[90vh] object-cover duration-1000 ease-in-out"
               src={slide.image}
               alt="India"
               width={12000}
@@ -54,13 +54,13 @@ export default function HomepageCarousel() {
               style={{ opacity: index === currentSlide ? 1 : 0 }}
               onClick={() => handleCarouselClick()}
             />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4 w-fit text-center">
+            {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4 w-fit text-center">
               <div className=" bg-opacity-50 rounded-md p-4">
                 <h2 className="text-xl sm:text-5xl  font-bold font-sans">
                   Explore | Customize | Travel
                 </h2>
               </div>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     domains: ["cloud.appwrite.io", "image1.com", "image2.com"],
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
+  // experimental: {
+  //   missingSuspenseWithCSRBailout: false,
+  // },
   // async redirects() {
   //     return [
   //     {

@@ -141,7 +141,7 @@ model ContactForm {
   arrivalDate         DateTime? @map("arrival_date") @db.Date
   travelingFrom       String?   @map("traveling_from")
   hotelCategory       String?   @map("hotel_category")
-  guests              Int?      @map("guests")
+  guests              String?   @map("guests")
   specialRequirements String?   @map("special_requirements")
   package             Package?  @relation(fields: [packageId], references: [id], onDelete: SetNull)
   packageId           Int?      @map("package_id")

@@ -1,7 +1,7 @@
-import AuthProvider from './components/SessionProvider';
+import AuthProvider from "./components/SessionProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-// Other import statements
+import ClientChatWrapper from "./components/ClientChatWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,28 +18,17 @@ export const metadata = {
   description: "Bokk your holiday packages and enjoy your holidays",
 };
 
-
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <AuthProvider>
-              {children}
-            </AuthProvider>
-          </body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AuthProvider>
+          {children}
+          <ClientChatWrapper />
+        </AuthProvider>
+      </body>
     </html>
-  )
+  );
 }
-
-// export default function RootLayout({ children }) {
-//   return (
-//     <html lang="en">
-//       <body
-//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-//       >
-//         {children}
-//       </body>
-//     </html>
-//   );
-// }

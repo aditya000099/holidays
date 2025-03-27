@@ -70,7 +70,7 @@ export default function ContactForm({
           arrivalDate: arrivalDate ? new Date(arrivalDate).toISOString() : "",
           travelingFrom: travelingFrom?.label || "",
           hotelCategory,
-          guests: Number(guests),
+          guests: guests,
           specialRequirements,
           packageId: packageId ? parseInt(packageId) : undefined,
         }),
