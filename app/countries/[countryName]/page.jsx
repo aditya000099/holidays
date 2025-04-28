@@ -1,174 +1,110 @@
-"use client";
-
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
-import { useParams, useRouter } from "next/navigation";
-import { use } from "react";
 import Navbar from "@/app/components/navbar";
+import { notFound } from "next/navigation";
+import PackageList from "@/app/components/CountryPagePackageList"; // Assuming PackageList moved to components
 
-export default function CountryPage() {
-  const params = useParams();
-  const { countryName } = useParams();
-  const [country, setCountry] = useState(null);
-  const [cities, setCities] = useState([]);
-  const router = useRouter();
+// Helper function to fetch data (replace with your actual API base URL if needed)
+async function fetchData(url, options = {}) {
+  // In a real app, use process.env.API_BASE_URL or similar
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"; // Or your actual API base
+  try {
+    const response = await fetch(`${baseUrl}${url}`, {
+      // Cache data for better performance, revalidate as needed
+      next: { revalidate: 3600 }, // Revalidate every hour, adjust as needed
+      ...options,
+    });
+    if (!response.ok) {
+      console.error(`Failed to fetch ${url}: ${response.status}`);
+      return null; // Or throw an error
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching ${url}:`, error);
+    return null; // Or throw an error
+  }
+}
 
-  useEffect(() => {
-    const fetchCountryData = async () => {
-      try {
-        const response = await fetch(`/api/countries`, {
-          next: {
-            revalidate: 360, // 6 mins
-          },
-        });
+// Fetch country, cities, and packages data server-side
+async function getCountryPageData(countryName) {
+  // 1. Fetch the specific country
+  // Assuming an endpoint like /api/countries?name=... or /api/countries/slug/...
+  // Using a filter approach for now, but a direct lookup is better.
+  const countries = await fetchData(`/api/countries`);
+  const country = countries?.find(
+    (c) => c.name.toLowerCase() === decodeURIComponent(countryName).toLowerCase()
+  );
 
-        if (response.ok) {
-          const data = await response.json();
-          const filteredCountry = data.find(
-            (country) => country.name === countryName
-          );
-          setCountry(filteredCountry);
-        } else {
-          console.error("Failed to fetch country", response.status);
-        }
-      } catch (e) {
-        console.error("Error getting country", e);
-      }
-    };
-    fetchCountryData();
-  }, [countryName]);
+  if (!country) {
+    return null; // Country not found
+  }
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (country) {
-        try {
-          const response = await fetch(`/api/cities?countryId=${country?.id}`);
-          if (response.ok) {
-            const data = await response.json();
-            setCities(data);
-          } else {
-            console.error("Error getting cities", response.status);
-          }
-        } catch (e) {
-          console.error("Error fetching cities", e);
-        }
-      }
-    };
-    fetchCities();
-  }, [country]);
+  // 2. Fetch cities for this country
+  const cities = await fetchData(`/api/cities?countryId=${country.id}`);
+  if (!cities || cities.length === 0) {
+    return { country, cities: [], packagesByCity: {} }; // Country found, but no cities
+  }
+
+  // 3. Fetch packages for all cities concurrently
+  const packagePromises = cities.map((city) =>
+    fetchData(`/api/packages?cityId=${city.id}`).then((packages) => ({
+      cityId: city.id,
+      packages: packages || [], // Ensure packages is an array even if fetch fails/returns null
+    }))
+  );
+
+  const packageResults = await Promise.all(packagePromises);
+
+  // Organize packages by city ID for easy lookup
+  const packagesByCity = packageResults.reduce((acc, result) => {
+    acc[result.cityId] = result.packages;
+    return acc;
+  }, {});
+
+  return { country, cities, packagesByCity };
+}
+
+export default async function CountryPage({ params }) {
+  const { countryName } = params;
+  const data = await getCountryPageData(countryName);
+
+  // Handle cases where data fetching failed or country not found
+  if (!data || !data.country) {
+    notFound(); // Use Next.js notFound() for 404 page
+  }
+
+  const { country, cities, packagesByCity } = data;
 
   return (
     <div>
       <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
       <div className="container mx-auto p-6 sm:p-20">
-        {country ? (
-          <>
-            <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
-              {country.name}
-            </h1>
-            {cities.length > 0 ? (
-              cities.map((city) => (
-                <section key={city.id} className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                    {city.name}
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <PackageList
-                      cityId={city.id}
-                      cityName={city.name}
-                      countryName={countryName}
-                    />
-                  </div>
-                </section>
-              ))
-            ) : (
-              <p className="text-gray-600">
-                No cities found for {country.name}.
-              </p>
-            )}
-          </>
+        <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
+          {country.name}
+        </h1>
+        {cities.length > 0 ? (
+          cities
+            .filter((city) => packagesByCity[city.id] && packagesByCity[city.id].length > 0)
+            .map((city) => (
+              <section key={city.id} className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  {city.name}
+                </h2>
+                {/* Pass pre-fetched packages to the Client Component */}
+                <PackageList
+                  cityId={city.id}
+                  cityName={city.name}
+                  countryName={countryName} // Keep countryName for routing
+                  initialPackages={packagesByCity[city.id] || []} // Pass fetched packages
+                />
+              </section>
+            ))
         ) : (
-          <p className="text-center text-gray-600">Loading...</p>
+          <p className="text-center text-gray-600">
+            No cities found for {country.name}.
+          </p>
         )}
       </div>
     </div>
-  );
-}
-
-function PackageList({ cityId, cityName, countryName }) {
-  const [packages, setPackages] = useState([]);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await fetch(`/api/packages?cityId=${cityId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setPackages(data);
-        } else {
-          console.error("Error getting packages", response.status);
-        }
-      } catch (e) {
-        console.error("Error getting packages:", e);
-      }
-    };
-    fetchPackages();
-  }, [cityId]);
-
-  const handlePackageClick = (pkg) => {
-    router.push(
-      `/countries/${countryName}/${cityName.toLowerCase()}/${pkg.id}`
-    );
-  };
-
-  return (
-    <>
-      {packages.length > 0 ? (
-        packages.map((pkg) => (
-          <div
-            key={pkg.id}
-            className="relative overflow-hidden rounded-2xl group cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300"
-            onClick={() => handlePackageClick(pkg)}
-          >
-            <div className="relative aspect-square rounded-xl overflow-hidden">
-              {pkg.images && pkg.images.length > 0 ? (
-                <Image
-                  src={pkg.images[0].imageUrl}
-                  alt={`Image for ${pkg.title}`}
-                  fill
-                  sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
-                />
-              ) : (
-                <Image
-                  src={"/default.png"}
-                  alt={"package photo"}
-                  fill
-                  sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw"
-                  className="object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
-                />
-              )}
-            </div>
-
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800 truncate">
-                {pkg.title}
-              </h3>
-              <p className="text-gray-600 truncate overflow-hidden text-ellipsis whitespace-nowrap mb-2 max-h-[2.8rem]">
-                {pkg.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <p className="text-gray-600">From ₹{pkg.price}</p>
-                <p className="text-gray-600 text-sm">{pkg.durationDays} Days</p>
-              </div>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-gray-600">No Packages found for {cityName}.</p>
-      )}
-    </>
   );
 }

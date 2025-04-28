@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import CustomFooter from "@/app/components/CustomFooter";
 
 export default function PackagePage() {
   const { countryName, cityName, packageId } = useParams();
@@ -66,16 +67,6 @@ export default function PackagePage() {
 
   return (
     <div className="font-geist-sans relative">
-      {/* Background Decorative Elements */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full">
-          {/* Top right circle */}
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-50" />
-          {/* Bottom left circle */}
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-50 rounded-full blur-3xl opacity-50" />
-        </div>
-      </div>
-
       <Navbar
         textColor={"text-gray-800"}
         blurredTextColor={"text-black"}
@@ -97,7 +88,7 @@ export default function PackagePage() {
           </div>
 
           {/* Hero Section */}
-          <div className="relative overflow-hidden rounded-2xl shadow-lg mb-8 sm:mt-20 mt-10 max-w-5xl mx-auto">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg mb-8 sm:mt-10 mt-10 max-w-5xl mx-auto">
             {pkg.images && pkg.images.length > 0 ? (
               <>
                 <Image
@@ -108,7 +99,7 @@ export default function PackagePage() {
                   alt={`Image for ${pkg.title}`}
                   width={1920}
                   height={1080}
-                  className="object-cover w-full h-[40vh] md:h-[60vh]"
+                  className="object-cover w-full h-[40vh] md:h-[80vh]"
                   priority
                 />
                 {/* Side Fade Effects */}
@@ -292,6 +283,7 @@ export default function PackagePage() {
           <div className="animate-pulse text-2xl text-gray-400">Loading...</div>
         </div>
       )}
+      <CustomFooter />
     </div>
   );
 }
