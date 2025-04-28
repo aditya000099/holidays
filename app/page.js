@@ -42,7 +42,7 @@ export default async function Home() {
   }));
 
   return (
-    <div className="min-h-screen font-[family-name:var(--font-geist-sans)] bg-gradient-to-b from-blue-50 to-white relative">
+    <div className="min-h-screen font-[family-name:var(--font-geist-sans)]  relative">
       {/* Decorative background elements */}
       <div className="hidden md:block absolute top-40 left-10 w-40 h-40 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
       <div className="hidden md:block absolute top-56 right-10 w-60 h-60 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -50,29 +50,10 @@ export default async function Home() {
 
       <Navbar />
 
-      {/* Hero Section with enhanced styling */}
+      {/* Hero Section now integrated into Carousel */}
       <section className="relative h-[60vh] sm:h-[90vh]">
-        <HomepageCarousel />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50 flex flex-col items-center justify-center text-white px-4 sm:px-6">
-          <MotionDiv
-            className="text-center w-full max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-2 sm:mb-4 text-shadow-lg leading-tight">
-              Discover <span className="text-yellow-400">Unforgettable</span>{" "}
-              Journeys
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-8 max-w-2xl mx-auto text-gray-100">
-              Explore curated holiday experiences tailored to your travel dreams
-            </p>
-
-            <div className="w-full max-w-3xl mx-auto px-4 sm:px-0">
-              <SearchBox cities={cities} />
-            </div>
-          </MotionDiv>
-        </div>
+        {/* Pass cities prop to the carousel */}
+        <HomepageCarousel cities={cities} />
       </section>
 
       {/* Main Content with improved styling */}
@@ -85,7 +66,7 @@ export default async function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-800 text-center mb-6 relative">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-zinc-900">
                 Explore Destinations
               </span>
               <div className="absolute w-24 h-1 bg-yellow-400 bottom-0 left-1/2 transform -translate-x-1/2 rounded-full"></div>
@@ -260,12 +241,12 @@ export default async function Home() {
       </main>
 
       {/* Footer could be added here */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-[#f4f4f4] text-white py-12">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Turbans & Traditions</h3>
-              <p className="text-gray-400">
+              <h3 className="text-xl font-bold mb-4 text-zinc-800">Turbans & Traditions</h3>
+              <p className="text-zinc-500">
                 Discover authentic cultural experiences across the globe.
               </p>
               <div className="flex space-x-4 mt-4">
@@ -273,7 +254,7 @@ export default async function Home() {
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-zinc-800 hover:text-white transition-colors"
                 >
                   <BsFacebook size={24} />
                 </a>
@@ -281,7 +262,7 @@ export default async function Home() {
                   href="https://instagram.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-zinc-800 hover:text-white transition-colors"
                 >
                   <BsInstagram size={24} />
                 </a>
@@ -289,40 +270,40 @@ export default async function Home() {
                   href="https://wa.me/1234567890"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-zinc-800 hover:text-white transition-colors"
                 >
                   <BsWhatsapp size={24} />
                 </a>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <h4 className="font-semibold mb-4 text-zinc-800">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white">
+                  <a href="#" className="text-zinc-500 hover:text-white">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white">
+                  <a href="#" className="text-zinc-500 hover:text-white">
                     Destinations
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white">
+                  <a href="#" className="text-zinc-500 hover:text-white">
                     Packages
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white">
+                  <a href="#" className="text-zinc-500 hover:text-white">
                     About Us
                   </a>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <address className="text-gray-400 not-italic">
+              <h4 className="font-semibold mb-4 text-zinc-800">Contact</h4>
+              <address className="text-zinc-500 not-italic">
                 99 Delhi Tower
                 <br />
                 Ghaziabad, UP 201001
@@ -333,23 +314,23 @@ export default async function Home() {
               </address>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Subscribe</h4>
-              <p className="text-gray-400 mb-4">
+              <h4 className="font-semibold mb-4 text-zinc-800">Subscribe</h4>
+              <p className="text-zinc-500 mb-4">
                 Stay updated with our latest offers
               </p>
               <div className="flex">
                 <input
                   type="email"
                   placeholder="Your email"
-                  className="px-4 py-2 rounded-l-md focus:outline-none text-gray-800 w-full"
+                  className="px-4 py-2 rounded-l-md focus:outline-none text-zinc-800 w-full"
                 />
-                <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-md">
+                <button className="bg-black hover:bg-zinc-900 px-4 py-2 rounded-r-md">
                   Subscribe
                 </button>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <div className="border-t border-zinc-400 mt-8 pt-8 text-center text-zinc-600">
             <p>
               &copy; {new Date().getFullYear()} Turbans & Traditions. All rights
               reserved.

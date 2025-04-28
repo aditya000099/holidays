@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Turban and Traditions",
+  title: "turbans & traditions",
   description: "Book your holiday packages and enjoy your holidays",
 };
 

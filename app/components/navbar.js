@@ -1,58 +1,35 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 import ContactForm from "./ContactForm";
 
-export default function Navbar({ textColor, blurredTextColor, blurBehavior }) {
-  const [navBlurred, setNavBlurred] = useState(false);
+export default function Navbar({ textColor, blurredTextColor }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navbarRef = useRef(null);
-
-  const getScrollThreshold = (behavior) => {
-    switch (behavior) {
-      case "early":
-        return window.innerHeight / 5;
-      case "always":
-        return -1; // always transparent
-      case "mid":
-      default:
-        return window.innerHeight / 3.5; // current behavior
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const threshold = getScrollThreshold(blurBehavior);
-      setNavBlurred(window.scrollY > threshold);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [blurBehavior]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const defaultTextColor = "text-white";
-  const defaultBlurredTextColor = "text-gray-800";
+  
+  const defaultBlurredTextColor = "text-zinc-900";
   return (
     <nav
       ref={navbarRef}
-      className={`fixed top-0 z-50 w-screen p-4 flex justify-between items-center transition-all duration-300 ${
-        navBlurred
-          ? "bg-white/70 backdrop-blur-lg border-b border-zinc-300 " +
-            (blurredTextColor || defaultBlurredTextColor)
-          : "bg-transparent " + (textColor || defaultTextColor)
-      }
+      className={`fixed top-0 z-50 w-screen p-4 flex justify-between items-center transition-all duration-300 bg-white/70 backdrop-blur-lg  ${blurredTextColor || defaultBlurredTextColor}
        `}
     >
-      <a href="/" className="text-2xl font-extrabold tracking-wide">
-        Turbans and Traditions
-      </a>
+      <div className="flex items-center flex-row">
+      <img src="/tnt.png" alt="Logo" width={36} height={36} />
+      <a href="/" className="text-2xl font-extrabold">
+      
 
+        turbans & traditions
+      </a>
+      </div>
       {/* Desktop Navigation */}
       <div className="hidden sm:flex space-x-6 text-lg font-medium sm:mr-10">
         <a href="/about" className="hover:text-indigo-500 transition">

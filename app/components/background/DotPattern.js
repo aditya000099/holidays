@@ -1,6 +1,6 @@
 export const BackgroundDots = ({
   dotSize = 1.0,
-  dotColor = "#6366f1",
+  dotColor = "#f4f4f4",
   backgroundColor = "transparent",
   gap = 24,
   className,
