@@ -67,14 +67,19 @@ async function getCountryPageData(countryName) {
 export default async function CountryPage({ params }) {
   // Decode the country name from the URL parameter
   const decodedCountryName = decodeURIComponent(params.countryName);
+  console.log(`[CountryPage] Attempting to fetch data for: ${decodedCountryName}`);
+
   const data = await getCountryPageData(decodedCountryName);
+  console.log(`[CountryPage] Data received for ${decodedCountryName}:`, data ? 'Data found' : 'No data found', data);
 
   // Handle cases where data fetching failed or country not found
   if (!data || !data.country) {
+    console.error(`[CountryPage] Country not found or data fetch failed for: ${decodedCountryName}. Calling notFound().`);
     notFound(); // Use Next.js notFound() for 404 page
   }
 
   const { country, cities, packagesByCity } = data;
+  console.log(`[CountryPage] Rendering page for country: ${country.name}`);
 
   return (
     <div>
