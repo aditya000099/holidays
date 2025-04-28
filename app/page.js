@@ -16,20 +16,25 @@ import BackgroundDots from "./components/background/DotPattern";
 import CustomFooter from "./components/CustomFooter";
 
 export default async function Home() {
-  const countries = await prisma.country.findMany();
-  const cities = await prisma.city.findMany({
-    include: {
-      country: true, // Include country data for each city
-    },
-  });
-  let packages = await prisma.package.findMany({
-    include: {
-      city: true,
-      images: true,
-      itinerary: true,
-    },
-  });
-  packages = packages.map((pkg) => ({
+  // Fetch countries, cities, and packages in parallel
+  const [countries, cities, rawPackages] = await Promise.all([
+    prisma.country.findMany(),
+    prisma.city.findMany({
+      include: {
+        country: true, // Include country data for each city
+      },
+    }),
+    prisma.package.findMany({
+      include: {
+        city: true,
+        images: true,
+        itinerary: true,
+      },
+    }),
+  ]);
+
+  // Process packages after fetching
+  let packages = rawPackages.map((pkg) => ({
     ...pkg,
     price: pkg.price.toNumber(),
     itinerary:

@@ -65,8 +65,9 @@ async function getCountryPageData(countryName) {
 }
 
 export default async function CountryPage({ params }) {
-  const { countryName } = params;
-  const data = await getCountryPageData(countryName);
+  // Decode the country name from the URL parameter
+  const decodedCountryName = decodeURIComponent(params.countryName);
+  const data = await getCountryPageData(decodedCountryName);
 
   // Handle cases where data fetching failed or country not found
   if (!data || !data.country) {
@@ -94,7 +95,7 @@ export default async function CountryPage({ params }) {
                 <PackageList
                   cityId={city.id}
                   cityName={city.name}
-                  countryName={countryName} // Keep countryName for routing
+                  countryName={decodedCountryName} // Keep countryName for routing
                   initialPackages={packagesByCity[city.id] || []} // Pass fetched packages
                 />
               </section>
