@@ -124,3 +124,8 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Add at the top of your globals.css file */
+html {
+  scroll-behavior: smooth;
+}
