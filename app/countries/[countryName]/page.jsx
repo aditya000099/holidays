@@ -3,6 +3,7 @@ import { BsStarFill } from "react-icons/bs";
 import Navbar from "@/app/components/navbar";
 import { notFound } from "next/navigation";
 import PackageList from "@/app/components/CountryPagePackageList";
+import { Suspense } from "react";
 
 // Helper function to fetch data with proper URL formatting
 async function fetchData(path, options = {}) {
@@ -109,6 +110,59 @@ async function getCountryPageData(countryName) {
   return { country, cities, packagesByCity };
 }
 
+// Skeleton loader component for country page
+function CountryPageSkeleton() {
+  return (
+    <div className="animate-pulse">
+      {/* Country title skeleton */}
+      <div className="flex justify-center mb-8">
+        <div className="h-10 bg-gray-200 rounded w-1/3 max-w-md"></div>
+      </div>
+
+      {/* City sections skeleton - create 3 placeholder cities */}
+      {[1, 2, 3].map((idx) => (
+        <div key={idx} className="mb-12">
+          {/* City title skeleton */}
+          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
+
+          {/* Packages grid skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Generate 3 package skeletons per city */}
+            {[1, 2, 3].map((packageIdx) => (
+              <div
+                key={packageIdx}
+                className="border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+              >
+                {/* Package image skeleton */}
+                <div className="w-full h-48 bg-gray-300"></div>
+
+                {/* Package content skeleton */}
+                <div className="p-4">
+                  {/* Title */}
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+
+                  {/* Description */}
+                  <div className="space-y-2 mb-4">
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+                  </div>
+
+                  {/* Price and rating */}
+                  <div className="flex justify-between items-center">
+                    <div className="h-5 bg-gray-200 rounded w-24"></div>
+                    <div className="h-5 bg-gray-200 rounded w-16"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function CountryPage({ params }) {
   // Fix the dynamic params warning by properly awaiting params
   const { countryName } = params;
@@ -119,23 +173,37 @@ export default async function CountryPage({ params }) {
     `[CountryPage] Attempting to fetch data for: ${decodedCountryName}`
   );
 
-  const data = await getCountryPageData(decodedCountryName);
+  return (
+    <div>
+      <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
+      <div className="container mx-auto p-6 sm:p-20">
+        <Suspense fallback={<CountryPageSkeleton />}>
+          <CountryContent countryName={decodedCountryName} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+// Separate component to fetch and display country content
+async function CountryContent({ countryName }) {
+  const data = await getCountryPageData(countryName);
 
   // Enhanced debugging for data fetching result
   if (data) {
-    console.log(`[CountryPage] Data found for ${decodedCountryName}:`, {
+    console.log(`[CountryPage] Data found for ${countryName}:`, {
       country: data.country?.name,
       citiesCount: data.cities?.length,
       packagesByCityCount: Object.keys(data.packagesByCity || {}).length,
     });
   } else {
-    console.error(`[CountryPage] No data found for ${decodedCountryName}`);
+    console.error(`[CountryPage] No data found for ${countryName}`);
   }
 
   // Handle cases where data fetching failed or country not found
   if (!data || !data.country) {
     console.error(
-      `[CountryPage] Country not found or data fetch failed for: ${decodedCountryName}. Calling notFound().`
+      `[CountryPage] Country not found or data fetch failed for: ${countryName}. Calling notFound().`
     );
     notFound(); // Use Next.js notFound() for 404 page
   }
@@ -144,38 +212,35 @@ export default async function CountryPage({ params }) {
   console.log(`[CountryPage] Rendering page for country: ${country.name}`);
 
   return (
-    <div>
-      <Navbar textColor={"text-gray-800"} blurredTextColor={"text-black"} />
-      <div className="container mx-auto p-6 sm:p-20">
-        <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
-          {country.name}
-        </h1>
-        {cities.length > 0 ? (
-          cities
-            .filter(
-              (city) =>
-                packagesByCity[city.id] && packagesByCity[city.id].length > 0
-            )
-            .map((city) => (
-              <section key={city.id} className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  {city.name}
-                </h2>
-                {/* Pass pre-fetched packages to the Client Component */}
-                <PackageList
-                  cityId={city.id}
-                  cityName={city.name}
-                  countryName={decodedCountryName} // Keep countryName for routing
-                  initialPackages={packagesByCity[city.id] || []} // Pass fetched packages
-                />
-              </section>
-            ))
-        ) : (
-          <p className="text-center text-gray-600">
-            No cities found for {country.name}.
-          </p>
-        )}
-      </div>
-    </div>
+    <>
+      <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
+        {country.name}
+      </h1>
+      {cities.length > 0 ? (
+        cities
+          .filter(
+            (city) =>
+              packagesByCity[city.id] && packagesByCity[city.id].length > 0
+          )
+          .map((city) => (
+            <section key={city.id} className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                {city.name}
+              </h2>
+              {/* Pass pre-fetched packages to the Client Component */}
+              <PackageList
+                cityId={city.id}
+                cityName={city.name}
+                countryName={countryName} // Keep countryName for routing
+                initialPackages={packagesByCity[city.id] || []} // Pass fetched packages
+              />
+            </section>
+          ))
+      ) : (
+        <p className="text-center text-gray-600">
+          No cities found for {country.name}.
+        </p>
+      )}
+    </>
   );
 }
