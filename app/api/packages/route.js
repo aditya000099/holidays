@@ -9,6 +9,8 @@ export async function POST(req) {
       description,
       price,
       durationDays,
+      days,
+      nights,
       cityName,
       images,
       highlights,
@@ -17,7 +19,7 @@ export async function POST(req) {
       itinerary,
     } = await req.json();
 
-    // Find the city ID by name
+    // Find city by name
     const city = await prisma.city.findFirst({
       where: {
         name: cityName,
@@ -25,95 +27,77 @@ export async function POST(req) {
     });
 
     if (!city) {
-      return NextResponse.json(
-        { message: `City with name '${cityName}' not found` },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "City not found" }, { status: 404 });
     }
-    const priceNumber = Number(price);
-    const durationDaysNumber = Number(durationDays);
 
+    // Filter out invalid itinerary items and ensure image is a string or null
+    const validItinerary =
+      itinerary
+        ?.filter((item) => item.title && item.title.trim() !== "")
+        .map((item) => ({
+          day: item.day,
+          title: item.title,
+          description: item.description || null,
+          // Ensure image is a string or null, not an object
+          image: typeof item.image === "string" ? item.image : null,
+        })) || [];
+
+    // Create package with all fields from the schema
     const newPackage = await prisma.package.create({
       data: {
         title,
         description,
-        price: priceNumber,
-        durationDays: durationDaysNumber,
+        price,
+        durationDays,
+        days,
+        nights,
         cityId: city.id,
-        highlights: highlights || [],
-        exclusions: exclusions || [],
-        inclusions: inclusions || [],
+        highlights: highlights?.filter((h) => h.trim() !== "") || [],
+        inclusions: inclusions?.filter((i) => i.trim() !== "") || [],
+        exclusions: exclusions?.filter((e) => e.trim() !== "") || [],
         images: {
-          create: images?.map((imageUrl) => ({ imageUrl: imageUrl })) || [],
+          create: images?.map((imageUrl) => ({ imageUrl })) || [],
         },
         itinerary: {
-          create:
-            itinerary?.map((item) => ({
-              day: item.day,
-              title: item.title,
-              description: item.description,
-              image: item.image,
-            })) || [],
+          create: validItinerary,
         },
       },
     });
 
-    return NextResponse.json(newPackage, { status: 200 });
+    return NextResponse.json(newPackage, { status: 201 });
   } catch (error) {
-    if (error) {
-      if (error instanceof Error) {
-        console.error("Error creating package:", {
-          message: error.message,
-          stack: error.stack,
-        });
-      } else {
-        console.error("Error creating package:", { error });
-      }
-    } else {
-      console.error("Error creating package:", { error });
-    }
-
+    console.error("Error creating package: ", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
     );
   }
 }
-export async function GET(req) {
+
+export async function GET() {
   try {
-    const url = new URL(req.url);
-    const cityId = url.searchParams.get("cityId");
-    const parsedCityId = cityId ? parseInt(cityId, 10) : undefined;
+    const packages = await prisma.package.findMany({
+      include: {
+        city: {
+          include: {
+            country: true,
+          },
+        },
+        images: true,
+        itinerary: {
+          orderBy: {
+            day: "asc",
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-    let packages;
-    if (parsedCityId) {
-      packages = await prisma.package.findMany({
-        where: {
-          cityId: parsedCityId,
-        },
-        include: {
-          city: true,
-          images: true,
-          itinerary: true,
-        },
-      });
-    } else {
-      packages = await prisma.package.findMany({
-        include: {
-          city: true,
-          images: true,
-          itinerary: true,
-        },
-      });
-    }
-    const modifiedPackages = packages.map((pkg) => ({
-      ...pkg,
-      price: pkg.price.toNumber(),
-    }));
-
-    return NextResponse.json(modifiedPackages, { status: 200 });
-  } catch (e) {
-    console.error("Error getting packages:", { e });
+    return NextResponse.json(packages, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching packages: ", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
