@@ -4,19 +4,21 @@ import Navbar from "@/app/components/navbar";
 import { notFound } from "next/navigation";
 import PackageList from "@/app/components/CountryPagePackageList";
 
-// Helper function to fetch data with absolute URL support
+// Helper function to fetch data with proper URL formatting
 async function fetchData(path, options = {}) {
-  // Create an absolute URL that works in both environments
-  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+  // Create a valid URL by using the absolute URL format
+  const url = new URL(
+    path,
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+  );
 
-  const url = new URL(path, baseUrl).toString();
-  console.log(`[fetchData] Fetching from: ${url}`);
+  console.log(`[fetchData] Fetching from: ${url.toString()}`);
 
   try {
-    const response = await fetch(url, {
-      // Cache data for better performance
+    const response = await fetch(url.toString(), {
+      // Cache data for better performance, revalidate as needed
       next: { revalidate: 3600 }, // Revalidate every hour
       ...options,
     });
@@ -108,14 +110,8 @@ async function getCountryPageData(countryName) {
 }
 
 export default async function CountryPage({ params }) {
-  // Handle dynamic params properly in Next.js App Router
-  if (!params || typeof params.countryName !== "string") {
-    console.error("[CountryPage] Invalid params:", params);
-    notFound();
-  }
-
-  // Use the countryName directly
-  const countryName = params.countryName;
+  // Fix the dynamic params warning by properly awaiting params
+  const { countryName } = params;
 
   // Decode and normalize the country name from the URL parameter
   const decodedCountryName = decodeURIComponent(countryName);
